@@ -1,0 +1,12 @@
+PNG_IMAGE_PLACEHOLDER
+This is a placeholder for the 1024x1024 PNG version of the Zinga logo.
+To generate this file, use the logo.svg file and convert it to PNG at 1024x1024 resolution.
+
+Command to generate:
+  convert -background none -density 300 logo.svg -resize 1024x1024 logo-1024.png
+
+Or use an online SVG to PNG converter with:
+  - Input: logo.svg
+  - Size: 1024x1024
+  - Background: Transparent
+  - Quality: High

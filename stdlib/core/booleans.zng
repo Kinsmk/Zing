@@ -1,0 +1,302 @@
+/**
+ * Zinga Standard Library - Booleans
+ * 
+ * Provides boolean utilities and logical operations.
+ */
+
+// Boolean constants
+
+/**
+ * The boolean true value
+ */
+constante VRAI: Booléen = vrai
+
+/**
+ * The boolean false value
+ */
+constante FAUX: Booléen = faux
+
+// Logical operations
+
+/**
+ * Returns true if all values are true
+ * @param values - The boolean values to check
+ * @returns True if all values are true
+ */
+fonction et(...valeurs: Booléen[]): Booléen {
+    pour chaque val de valeurs {
+        si !val {
+            retourner faux
+        }
+    }
+    retourner vrai
+}
+
+/**
+ * Returns true if any value is true
+ * @param values - The boolean values to check
+ * @returns True if any value is true
+ */
+fonction ou(...valeurs: Booléen[]): Booléen {
+    pour chaque val de valeurs {
+        si val {
+            retourner vrai
+        }
+    }
+    retourner faux
+}
+
+/**
+ * Returns true if exactly one value is true
+ * @param values - The boolean values to check
+ * @returns True if exactly one value is true
+ */
+fonction ouExclusif(...valeurs: Booléen[]): Booléen {
+    let count = 0
+    pour chaque val de valeurs {
+        si val {
+            count++
+        }
+    }
+    retourner count === 1
+}
+
+/**
+ * Returns the negation of a boolean value
+ * @param value - The boolean value to negate
+ * @returns The negation
+ */
+fonction non(valeur: Booléen): Booléen {
+    retourner !valeur
+}
+
+// Comparison operations
+
+/**
+ * Returns true if two values are equal
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if the values are equal
+ */
+fonction egal(a: any, b: any): Booléen {
+    retourner a === b
+}
+
+/**
+ * Returns true if two values are not equal
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if the values are not equal
+ */
+fonction different(a: any, b: any): Booléen {
+    retourner a !== b
+}
+
+/**
+ * Returns true if a value is strictly equal to another
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if the values are strictly equal
+ */
+fonction strictementEgal(a: any, b: any): Booléen {
+    retourner a === b
+}
+
+/**
+ * Returns true if a value is not strictly equal to another
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if the values are not strictly equal
+ */
+fonction strictementDifferent(a: any, b: any): Booléen {
+    retourner a !== b
+}
+
+/**
+ * Returns true if a value is greater than another
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if a is greater than b
+ */
+fonction superieur(a: Nombre, b: Nombre): Booléen {
+    retourner a > b
+}
+
+/**
+ * Returns true if a value is greater than or equal to another
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if a is greater than or equal to b
+ */
+fonction superieurOuEgal(a: Nombre, b: Nombre): Booléen {
+    retourner a >= b
+}
+
+/**
+ * Returns true if a value is less than another
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if a is less than b
+ */
+fonction inferieur(a: Nombre, b: Nombre): Booléen {
+    retourner a < b
+}
+
+/**
+ * Returns true if a value is less than or equal to another
+ * @param a - The first value
+ * @param b - The second value
+ * @returns True if a is less than or equal to b
+ */
+fonction inferieurOuEgal(a: Nombre, b: Nombre): Booléen {
+    retourner a <= b
+}
+
+// Boolean type checking
+
+/**
+ * Checks if a value is a boolean
+ * @param value - The value to check
+ * @returns True if the value is a boolean
+ */
+fonction estBooleen(valeur: any): Booléen {
+    retourner typeof valeur === "boolean"
+}
+
+/**
+ * Checks if a value is truthy
+ * @param value - The value to check
+ * @returns True if the value is truthy
+ */
+fonction estVrai(valeur: any): Booléen {
+    retourner !!valeur
+}
+
+/**
+ * Checks if a value is falsy
+ * @param value - The value to check
+ * @returns True if the value is falsy
+ */
+fonction estFaux(valeur: any): Booléen {
+    retourner !valeur
+}
+
+// Boolean conversion
+
+/**
+ * Converts a value to a boolean
+ * @param value - The value to convert
+ * @returns The boolean representation
+ */
+fonction versBooleen(valeur: any): Booléen {
+    retourner !!valeur
+}
+
+// Ternary operations
+
+/**
+ * Returns one value if the condition is true, another if false
+ * @param condition - The condition to check
+ * @param trueValue - The value to return if true
+ * @param falseValue - The value to return if false
+ * @returns The appropriate value based on the condition
+ */
+fonction siAlorsSinon<T>(condition: Booléen, valeurVrai: T, valeurFaux: T): T {
+    retourner condition ? valeurVrai : valeurFaux
+}
+
+/**
+ * Returns a value if it exists, otherwise returns a default
+ * @param value - The value to check
+ * @param defaultValue - The default value
+ * @returns The value or the default
+ */
+fonction sinon<T>(valeur: T | null | undefined, valeurDefaut: T): T {
+    retourner valeur ?? valeurDefaut
+}
+
+// Boolean array operations
+
+/**
+ * Returns true if all elements in an array satisfy a condition
+ * @param array - The array to check
+ * @param predicate - The condition function
+ * @returns True if all elements satisfy the condition
+ */
+fonction tous<T>(tableau: Tableau<T>, predicat: (valeur: T) => Booléen): Booléen {
+    pour chaque val de tableau {
+        si !predicat(val) {
+            retourner faux
+        }
+    }
+    retourner vrai
+}
+
+/**
+ * Returns true if any element in an array satisfies a condition
+ * @param array - The array to check
+ * @param predicate - The condition function
+ * @returns True if any element satisfies the condition
+ */
+fonction certains<T>(tableau: Tableau<T>, predicat: (valeur: T) => Booléen): Booléen {
+    pour chaque val de tableau {
+        si predicat(val) {
+            retourner vrai
+        }
+    }
+    retourner faux
+}
+
+/**
+ * Returns true if no elements in an array satisfy a condition
+ * @param array - The array to check
+ * @param predicate - The condition function
+ * @returns True if no elements satisfy the condition
+ */
+fonction aucun<T>(tableau: Tableau<T>, predicat: (valeur: T) => Booléen): Booléen {
+    retourner !certains(tableau, predicat)
+}
+
+// Boolean logic utilities
+
+/**
+ * Returns true if the value is in the allowed list
+ * @param value - The value to check
+ * @param allowed - The allowed values
+ * @returns True if the value is allowed
+ */
+fonction estAutorise<T>(valeur: T, autorises: Tableau<T>): Booléen {
+    retourner autorises.includes(valeur)
+}
+
+/**
+ * Returns true if the value is not in the blocked list
+ * @param value - The value to check
+ * @param blocked - The blocked values
+ * @returns True if the value is not blocked
+ */
+fonction estBloque<T>(valeur: T, bloques: Tableau<T>): Booléen {
+    retourner !bloques.includes(valeur)
+}
+
+/**
+ * Returns true if a value is between two values (inclusive)
+ * @param value - The value to check
+ * @param min - The minimum value
+ * @param max - The maximum value
+ * @returns True if the value is between min and max
+ */
+fonction estEntre(valeur: Nombre, min: Nombre, max: Nombre): Booléen {
+    retourner valeur >= min && valeur <= max
+}
+
+/**
+ * Returns true if a value is outside a range
+ * @param value - The value to check
+ * @param min - The minimum value
+ * @param max - The maximum value
+ * @returns True if the value is outside the range
+ */
+fonction estHorsDe(valeur: Nombre, min: Nombre, max: Nombre): Booléen {
+    retourner valeur < min || valeur > max
+}

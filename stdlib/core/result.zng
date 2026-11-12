@@ -1,0 +1,389 @@
+/**
+ * Zinga Standard Library - Result
+ * 
+ * Provides the Result type for representing success or failure.
+ * Similar to Rust's Result or TypeScript's Either.
+ */
+
+/**
+ * Result type - represents success or failure
+ * @template T - The success type
+ * @template E - The error type
+ */
+structure Result<T, E> {
+    /**
+     * Creates an Ok result
+     * @param value - The success value
+     * @returns An Ok result
+     */
+    static Ok<T, E>(valeur: T): Result<T, E> {
+        retourner { type: "Ok", value: valeur }
+    }
+
+    /**
+     * Creates an Err result
+     * @param error - The error value
+     * @returns An Err result
+     */
+    static Err<T, E>(erreur: E): Result<T, E> {
+        retourner { type: "Err", error: erreur }
+    }
+
+    /**
+     * Checks if the result is Ok
+     * @returns True if the result is Ok
+     */
+    estOk(): Booléen {
+        retourner this.type === "Ok"
+    }
+
+    /**
+     * Checks if the result is Err
+     * @returns True if the result is Err
+     */
+    estErr(): Booléen {
+        retourner this.type === "Err"
+    }
+
+    /**
+     * Gets the value if Ok, throws if Err
+     * @returns The success value
+     * @throws Error with the error value if Err
+     */
+    valeur(): T {
+        si this.estErr() {
+            lancer this.error
+        }
+        retourner this.value
+    }
+
+    /**
+     * Gets the error if Err, throws if Ok
+     * @returns The error value
+     * @throws Error if the result is Ok
+     */
+    erreur(): E {
+        si this.estOk() {
+            lancer "Cannot get error from Ok result"
+        }
+        retourner this.error
+    }
+
+    /**
+     * Maps the success value
+     * @param mapper - The mapping function
+     * @returns A new result with the mapped value
+     */
+    mapper<U>(mappeur: (valeur: T) => U): Result<U, E> {
+        si this.estErr() {
+            retourner Result.Err(this.error)
+        }
+        retourner Result.Ok(mappeur(this.value))
+    }
+
+    /**
+     * Maps the error value
+     * @param mapper - The mapping function
+     * @returns A new result with the mapped error
+     */
+    mapperErreur<F>(mappeur: (erreur: E) => F): Result<T, F> {
+        si this.estOk() {
+            retourner Result.Ok(this.value)
+        }
+        retourner Result.Err(mappeur(this.error))
+    }
+
+    /**
+     * Flat maps the success value
+     * @param mapper - The mapping function that returns a result
+     * @returns A new result
+     */
+    flatMapper<U>(mappeur: (valeur: T) => Result<U, E>): Result<U, E> {
+        si this.estErr() {
+            retourner Result.Err(this.error)
+        }
+        retourner mappeur(this.value)
+    }
+
+    /**
+     * Returns the value if Ok, otherwise returns a default
+     * @param defaultValue - The default value
+     * @returns The value or the default
+     */
+    sinon(valeurDefaut: T): T {
+        retourner this.estOk() ? this.value : valeurDefaut
+    }
+
+    /**
+     * Returns the error if Err, otherwise returns a default
+     * @param defaultError - The default error
+     * @returns The error or the default
+     */
+    sinonErreur(erreurDefaut: E): E {
+        retourner this.estErr() ? this.error : erreurDefaut
+    }
+
+    /**
+     * Applies a function to the success value if Ok
+     * @param consumer - The function to apply
+     */
+    siOk(consommateur: (valeur: T) => void): void {
+        si this.estOk() {
+            consommateur(this.value)
+        }
+    }
+
+    /**
+     * Applies a function to the error value if Err
+     * @param consumer - The function to apply
+     */
+    siErr(consommateur: (erreur: E) => void): void {
+        si this.estErr() {
+            consommateur(this.error)
+        }
+    }
+
+    /**
+     * Returns the value or throws with a custom message
+     * @param message - The error message
+     * @returns The value
+     * @throws Error with the custom message if Err
+     */
+    sinonLancer(message: Chaine): T {
+        si this.estErr() {
+            lancer message
+        }
+        retourner this.value
+    }
+
+    /**
+     * Converts the result to an option (discarding the error)
+     * @returns An option with the value if Ok, otherwise None
+     */
+    versOption(): Option<T> {
+        retourner this.estOk() ? Option.Some(this.value) : Option.None()
+    }
+
+    /**
+     * Converts the result to a nullable value
+     * @returns The value or null
+     */
+    versNullable(): T | null {
+        retourner this.estOk() ? this.value : null
+    }
+
+    /**
+     * Checks if the result contains a specific value
+     * @param value - The value to check
+     * @returns True if the result contains the value
+     */
+    contient(valeur: T): Booléen {
+        retourner this.estOk() && this.value === valeur
+    }
+
+    /**
+     * Checks if the result contains a specific error
+     * @param error - The error to check
+     * @returns True if the result contains the error
+     */
+    contientErreur(erreur: E): Booléen {
+        retourner this.estErr() && this.error === erreur
+    }
+}
+
+// Type guards
+
+/**
+ * Checks if a value is a Result
+ * @param value - The value to check
+ * @returns True if the value is a Result
+ */
+fonction estResultat(valeur: any): Booléen {
+    retourner valeur && (valeur.type === "Ok" || valeur.type === "Err")
+}
+
+/**
+ * Checks if a result is Ok
+ * @param result - The result to check
+ * @returns True if the result is Ok
+ */
+fonction estOk<T, E>(resultat: Result<T, E>): Booléen {
+    retourner resultat.estOk()
+}
+
+/**
+ * Checks if a result is Err
+ * @param result - The result to check
+ * @returns True if the result is Err
+ */
+fonction estErr<T, E>(resultat: Result<T, E>): Booléen {
+    retourner resultat.estErr()
+}
+
+// Factory functions
+
+/**
+ * Creates an Ok result
+ * @param value - The success value
+ * @returns An Ok result
+ */
+fonction ok<T, E>(valeur: T): Result<T, E> {
+    retourner Result.Ok(valeur)
+}
+
+/**
+ * Creates an Err result
+ * @param error - The error value
+ * @returns An Err result
+ */
+fonction err<T, E>(erreur: E): Result<T, E> {
+    retourner Result.Err(erreur)
+}
+
+// Utility functions
+
+/**
+ * Unwraps a result or returns a default
+ * @param result - The result
+ * @param defaultValue - The default value
+ * @returns The value or the default
+ */
+fonction deResultat<T, E>(resultat: Result<T, E>, valeurDefaut: T): T {
+    retourner resultat.sinon(valeurDefaut)
+}
+
+/**
+ * Unwraps a result or throws
+ * @param result - The result
+ * @returns The value
+ * @throws Error if the result is Err
+ */
+fonction deResultatOuLancer<T, E>(resultat: Result<T, E>): T {
+    si resultat.estErr() {
+        lancer resultat.error
+    }
+    retourner resultat.valeur()
+}
+
+/**
+ * Unwraps a result or throws with a custom message
+ * @param result - The result
+ * @param message - The error message
+ * @returns The value
+ * @throws Error with the custom message if Err
+ */
+fonction deResultatOuLancerAvecMessage<T, E>(resultat: Result<T, E>, message: Chaine): T {
+    si resultat.estErr() {
+        lancer message
+    }
+    retourner resultat.valeur()
+}
+
+/**
+ * Maps a result
+ * @param result - The result
+ * @param mapper - The mapping function
+ * @returns A new result with the mapped value
+ */
+fonction mapperResultat<T, U, E>(resultat: Result<T, E>, mappeur: (valeur: T) => U): Result<U, E> {
+    retourner resultat.mapper(mappeur)
+}
+
+/**
+ * Flat maps a result
+ * @param result - The result
+ * @param mapper - The mapping function that returns a result
+ * @returns A new result
+ */
+fonction flatMapperResultat<T, U, E>(resultat: Result<T, E>, mappeur: (valeur: T) => Result<U, E>): Result<U, E> {
+    retourner resultat.flatMapper(mappeur)
+}
+
+/**
+ * Maps the error of a result
+ * @param result - The result
+ * @param mapper - The mapping function
+ * @returns A new result with the mapped error
+ */
+fonction mapperErreurResultat<T, E, F>(resultat: Result<T, E>, mappeur: (erreur: E) => F): Result<T, F> {
+    retourner resultat.mapperErreur(mappeur)
+}
+
+/**
+ * Chains multiple result operations
+ * @param result - The result
+ * @param mappers - The mapping functions
+ * @returns A new result
+ */
+fonction chaineResultat<T, U, E>(resultat: Result<T, E>, ...mappeurs: Array<(valeur: any) => Result<any, E>>): Result<U, E> {
+    let result: Result<any, E> = resultat as any
+    pour chaque mappeur de mappeurs {
+        result = result.flatMapper(mappeur)
+    }
+    retourner result as Result<U, E>
+}
+
+/**
+ * Combines multiple results into a single result
+ * @param results - The results to combine
+ * @returns A result with an array of values if all are Ok, otherwise the first error
+ */
+fonction combinerResultats<T, E>(...resultats: Result<T, E>[]): Result<Tableau<T>, E> {
+    const valeurs: T[] = []
+    pour chaque resultat de resultats {
+        si resultat.estErr() {
+            retourner Result.Err(resultat.error)
+        }
+        valeurs.push(resultat.value)
+    }
+    retourner Result.Ok(valeurs)
+}
+
+/**
+ * Combines multiple results, collecting all errors
+ * @param results - The results to combine
+ * @returns A result with an array of values if all are Ok, otherwise an array of errors
+ */
+fonction combinerResultatsAvecErreurs<T, E>(...resultats: Result<T, E>[]): Result<Tableau<T>, Tableau<E>> {
+    const valeurs: T[] = []
+    const erreurs: E[] = []
+    
+    pour chaque resultat de resultats {
+        si resultat.estOk() {
+            valeurs.push(resultat.value)
+        } sinon {
+            erreurs.push(resultat.error)
+        }
+    }
+    
+    si erreurs.longueur > 0 {
+        retourner Result.Err(erreurs)
+    }
+    retourner Result.Ok(valeurs)
+}
+
+/**
+ * Tries to execute a function and returns a result
+ * @param fn - The function to execute
+ * @returns A result with the return value or the error
+ */
+fonction essayer<T>(fn: () => T): Result<T, any> {
+    essayer {
+        retourner Result.Ok(fn())
+    } attraper (erreur) {
+        retourner Result.Err(erreur)
+    }
+}
+
+/**
+ * Tries to execute an async function and returns a result
+ * @param fn - The async function to execute
+ * @returns A promise with a result
+ */
+async fonction essayerAsync<T>(fn: () => Promise<T>): Promise<Result<T, any>> {
+    essayer {
+        retourner Result.Ok(await fn())
+    } attraper (erreur) {
+        retourner Result.Err(erreur)
+    }
+}

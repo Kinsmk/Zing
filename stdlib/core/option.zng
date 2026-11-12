@@ -1,0 +1,277 @@
+/**
+ * Zinga Standard Library - Option
+ * 
+ * Provides the Option type for representing optional values.
+ * Similar to Rust's Option or Swift's Optional.
+ */
+
+/**
+ * Option type - represents an optional value
+ * @template T - The type of the value
+ */
+structure Option<T> {
+    /**
+     * Creates a Some option
+     * @param value - The value
+     * @returns A Some option
+     */
+    static Some(valeur: T): Option<T> {
+        retourner { type: "Some", value: valeur }
+    }
+
+    /**
+     * Creates a None option
+     * @returns A None option
+     */
+    static None(): Option<T> {
+        retourner { type: "None" }
+    }
+
+    /**
+     * Checks if the option is Some
+     * @returns True if the option is Some
+     */
+    estSome(): Booléen {
+        retourner this.type === "Some"
+    }
+
+    /**
+     * Checks if the option is None
+     * @returns True if the option is None
+     */
+    estNone(): Booléen {
+        retourner this.type === "None"
+    }
+
+    /**
+     * Gets the value if Some, throws if None
+     * @returns The value
+     * @throws Error if the option is None
+     */
+    valeur(): T {
+        si this.estNone() {
+            lancer "Cannot get value from None option"
+        }
+        retourner this.value
+    }
+
+    /**
+     * Gets the value if Some, otherwise returns a default
+     * @param defaultValue - The default value
+     * @returns The value or the default
+     */
+    sinon(valeurDefaut: T): T {
+        retourner this.estSome() ? this.value : valeurDefaut
+    }
+
+    /**
+     * Maps the option's value
+     * @param mapper - The mapping function
+     * @returns A new option with the mapped value
+     */
+    mapper<U>(mappeur: (valeur: T) => U): Option<U> {
+        si this.estNone() {
+            retourner Option.None()
+        }
+        retourner Option.Some(mappeur(this.value))
+    }
+
+    /**
+     * Flat maps the option's value
+     * @param mapper - The mapping function that returns an option
+     * @returns A new option
+     */
+    flatMapper<U>(mappeur: (valeur: T) => Option<U>): Option<U> {
+        si this.estNone() {
+            retourner Option.None()
+        }
+        retourner mappeur(this.value)
+    }
+
+    /**
+     * Filters the option based on a predicate
+     * @param predicate - The filter function
+     * @returns A new option if the predicate returns true, otherwise None
+     */
+    filtrer(predicat: (valeur: T) => Booléen): Option<T> {
+        si this.estNone() || !predicat(this.value) {
+            retourner Option.None()
+        }
+        retourner this
+    }
+
+    /**
+     * Applies a function to the option if Some
+     * @param consumer - The function to apply
+     */
+    siPresent(consommateur: (valeur: T) => void): void {
+        si this.estSome() {
+            consommateur(this.value)
+        }
+    }
+
+    /**
+     * Returns the value or throws with a custom message
+     * @param message - The error message
+     * @returns The value
+     * @throws Error with the custom message if None
+     */
+    sinonLancer(message: Chaine): T {
+        si this.estNone() {
+            lancer message
+        }
+        retourner this.value
+    }
+
+    /**
+     * Converts the option to an array
+     * @returns An array with the value if Some, otherwise empty array
+     */
+    versTableau(): Tableau<T> {
+        retourner this.estSome() ? [this.value] : []
+    }
+
+    /**
+     * Converts the option to a nullable value
+     * @returns The value or null
+     */
+    versNullable(): T | null {
+        retourner this.estSome() ? this.value : null
+    }
+
+    /**
+     * Converts the option to a boolean
+     * @returns True if Some, false if None
+     */
+    versBooleen(): Booléen {
+        retourner this.estSome()
+    }
+
+    /**
+     * Checks if the option contains a specific value
+     * @param value - The value to check
+     * @returns True if the option contains the value
+     */
+    contient(valeur: T): Booléen {
+        retourner this.estSome() && this.value === valeur
+    }
+}
+
+// Type guards
+
+/**
+ * Checks if a value is an Option
+ * @param value - The value to check
+ * @returns True if the value is an Option
+ */
+fonction estOption(valeur: any): Booléen {
+    retourner valeur && (valeur.type === "Some" || valeur.type === "None")
+}
+
+/**
+ * Checks if an option is Some
+ * @param option - The option to check
+ * @returns True if the option is Some
+ */
+fonction estSome<T>(option: Option<T>): Booléen {
+    retourner option.estSome()
+}
+
+/**
+ * Checks if an option is None
+ * @param option - The option to check
+ * @returns True if the option is None
+ */
+fonction estNone<T>(option: Option<T>): Booléen {
+    retourner option.estNone()
+}
+
+// Factory functions
+
+/**
+ * Creates a Some option
+ * @param value - The value
+ * @returns A Some option
+ */
+fonction certains<T>(valeur: T): Option<T> {
+    retourner Option.Some(valeur)
+}
+
+/**
+ * Creates a None option
+ * @returns A None option
+ */
+fonction aucun<T>(): Option<T> {
+    retourner Option.None()
+}
+
+/**
+ * Creates an option from a nullable value
+ * @param value - The nullable value
+ * @returns An option
+ */
+fonction deNullable<T>(valeur: T | null | undefined): Option<T> {
+    si valeur === null || valeur === undefined {
+        retourner aucun()
+    }
+    retourner certains(valeur)
+}
+
+// Utility functions
+
+/**
+ * Unwraps an option or returns a default
+ * @param option - The option
+ * @param defaultValue - The default value
+ * @returns The value or the default
+ */
+fonction deOption<T>(option: Option<T>, valeurDefaut: T): T {
+    retourner option.sinon(valeurDefaut)
+}
+
+/**
+ * Unwraps an option or throws
+ * @param option - The option
+ * @returns The value
+ * @throws Error if the option is None
+ */
+fonction deOptionOuLancer<T>(option: Option<T>): T {
+    si option.estNone() {
+        lancer "Cannot unwrap None option"
+    }
+    retourner option.valeur()
+}
+
+/**
+ * Maps an option
+ * @param option - The option
+ * @param mapper - The mapping function
+ * @returns A new option with the mapped value
+ */
+fonction mapperOption<T, U>(option: Option<T>, mappeur: (valeur: T) => U): Option<U> {
+    retourner option.mapper(mappeur)
+}
+
+/**
+ * Flat maps an option
+ * @param option - The option
+ * @param mapper - The mapping function that returns an option
+ * @returns A new option
+ */
+fonction flatMapperOption<T, U>(option: Option<T>, mappeur: (valeur: T) => Option<U>): Option<U> {
+    retourner option.flatMapper(mappeur)
+}
+
+/**
+ * Chains multiple option operations
+ * @param option - The option
+ * @param mappers - The mapping functions
+ * @returns A new option
+ */
+fonction chaineOption<T, U>(option: Option<T>, ...mappeurs: Array<(valeur: any) => Option<any>>): Option<U> {
+    let result: Option<any> = option as any
+    pour chaque mappeur de mappeurs {
+        result = result.flatMapper(mappeur)
+    }
+    retourner result as Option<U>
+}

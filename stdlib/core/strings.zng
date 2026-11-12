@@ -1,0 +1,226 @@
+/**
+ * Zinga Standard Library - Strings
+ * 
+ * Provides string manipulation functions and utilities.
+ */
+
+// String manipulation functions
+
+/**
+ * Returns the length of a string
+ * @param str - The input string
+ * @returns The length of the string
+ */
+fonction longueur(chaine: Chaine): Entier {
+    retourner chaine.longueur()
+}
+
+/**
+ * Converts a string to uppercase
+ * @param str - The input string
+ * @returns The uppercase string
+ */
+fonction majuscules(chaine: Chaine): Chaine {
+    retourner chaine.majuscules()
+}
+
+/**
+ * Converts a string to lowercase
+ * @param str - The input string
+ * @returns The lowercase string
+ */
+fonction minuscules(chaine: Chaine): Chaine {
+    retourner chaine.minuscules()
+}
+
+/**
+ * Trims whitespace from both ends of a string
+ * @param str - The input string
+ * @returns The trimmed string
+ */
+fonction trim(chaine: Chaine): Chaine {
+    retourner chaine.trim()
+}
+
+/**
+ * Trims whitespace from the start of a string
+ * @param str - The input string
+ * @returns The trimmed string
+ */
+fonction trimStart(chaine: Chaine): Chaine {
+    retourner chaine.trimStart()
+}
+
+/**
+ * Trims whitespace from the end of a string
+ * @param str - The input string
+ * @returns The trimmed string
+ */
+fonction trimEnd(chaine: Chaine): Chaine {
+    retourner chaine.trimEnd()
+}
+
+/**
+ * Checks if a string contains a substring
+ * @param str - The input string
+ * @param search - The substring to search for
+ * @returns True if the string contains the substring
+ */
+fonction contient(chaine: Chaine, recherche: Chaine): Booléen {
+    retourner chaine.contient(recherche)
+}
+
+/**
+ * Checks if a string starts with a prefix
+ * @param str - The input string
+ * @param prefix - The prefix to check
+ * @returns True if the string starts with the prefix
+ */
+fonction commencePar(chaine: Chaine, prefixe: Chaine): Booléen {
+    retourner chaine.commencePar(prefixe)
+}
+
+/**
+ * Checks if a string ends with a suffix
+ * @param str - The input string
+ * @param suffix - The suffix to check
+ * @returns True if the string ends with the suffix
+ */
+fonction finitPar(chaine: Chaine, suffixe: Chaine): Booléen {
+    retourner chaine.finitPar(suffixe)
+}
+
+/**
+ * Splits a string into an array of substrings
+ * @param str - The input string
+ * @param separator - The separator to split by
+ * @returns An array of substrings
+ */
+fonction diviser(chaine: Chaine, separateur: Chaine): Tableau<Chaine> {
+    retourner chaine.diviser(separateur)
+}
+
+/**
+ * Joins an array of strings into a single string
+ * @param array - The array of strings
+ * @param separator - The separator to join with
+ * @returns The joined string
+ */
+fonction joindre(tableau: Tableau<Chaine>, separateur: Chaine): Chaine {
+    retourner tableau.joindre(separateur)
+}
+
+/**
+ * Replaces all occurrences of a substring in a string
+ * @param str - The input string
+ * @param search - The substring to replace
+ * @param replacement - The replacement string
+ * @returns The string with replacements
+ */
+fonction remplacer(chaine: Chaine, recherche: Chaine, remplacement: Chaine): Chaine {
+    retourner chaine.remplacer(recherche, remplacement)
+}
+
+/**
+ * Gets a substring from a string
+ * @param str - The input string
+ * @param start - The start index
+ * @param end - The end index (optional)
+ * @returns The substring
+ */
+fonction sousChaine(chaine: Chaine, debut: Entier, fin: Entier?): Chaine {
+    si fin est defini {
+        retourner chaine.sousChaine(debut, fin)
+    } sinon {
+        retourner chaine.sousChaine(debut)
+    }
+}
+
+/**
+ * Gets the character at a specific index
+ * @param str - The input string
+ * @param index - The index
+ * @returns The character at the index
+ */
+fonction charAt(chaine: Chaine, index: Entier): Chaine {
+    retourner chaine.charAt(index)
+}
+
+/**
+ * Gets the index of a substring in a string
+ * @param str - The input string
+ * @param search - The substring to search for
+ * @returns The index of the substring, or -1 if not found
+ */
+fonction indexDe(chaine: Chaine, recherche: Chaine): Entier {
+    retourner chaine.indexDe(recherche)
+}
+
+/**
+ * Gets the last index of a substring in a string
+ * @param str - The input string
+ * @param search - The substring to search for
+ * @returns The last index of the substring, or -1 if not found
+ */
+fonction dernierIndexDe(chaine: Chaine, recherche: Chaine): Entier {
+    retourner chaine.dernierIndexDe(recherche)
+}
+
+/**
+ * Checks if a string is empty
+ * @param str - The input string
+ * @returns True if the string is empty
+ */
+fonction estVide(chaine: Chaine): Booléen {
+    retourner chaine.longueur() === 0
+}
+
+/**
+ * Checks if a string is blank (empty or whitespace only)
+ * @param str - The input string
+ * @returns True if the string is blank
+ */
+fonction estBlanc(chaine: Chaine): Booléen {
+    retourner chaine.trim().longueur() === 0
+}
+
+/**
+ * Pads a string to a specified length
+ * @param str - The input string
+ * @param targetLength - The target length
+ * @param padString - The string to pad with (default: space)
+ * @returns The padded string
+ */
+fonction padStart(chaine: Chaine, longueurCible: Entier, chaineRemplissage: Chaine = " "): Chaine {
+    retourner chaine.padStart(longueurCible, chaineRemplissage)
+}
+
+/**
+ * Pads a string to a specified length at the end
+ * @param str - The input string
+ * @param targetLength - The target length
+ * @param padString - The string to pad with (default: space)
+ * @returns The padded string
+ */
+fonction padEnd(chaine: Chaine, longueurCible: Entier, chaineRemplissage: Chaine = " "): Chaine {
+    retourner chaine.padEnd(longueurCible, chaineRemplissage)
+}
+
+/**
+ * Repeats a string a specified number of times
+ * @param str - The input string
+ * @param count - The number of times to repeat
+ * @returns The repeated string
+ */
+fonction repeter(chaine: Chaine, compte: Entier): Chaine {
+    retourner chaine.repeter(compte)
+}
+
+/**
+ * Converts a value to a string
+ * @param value - The value to convert
+ * @returns The string representation of the value
+ */
+fonction versChaine(valeur: any): Chaine {
+    retourner Chaine(valeur)
+}

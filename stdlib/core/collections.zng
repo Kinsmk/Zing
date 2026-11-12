@@ -1,0 +1,717 @@
+/**
+ * Zinga Standard Library - Collections
+ * 
+ * Provides utilities for working with arrays, maps, and sets.
+ */
+
+// Array utilities
+
+/**
+ * Returns the first element of an array
+ * @param array - The input array
+ * @returns The first element or undefined
+ */
+fonction premier<T>(tableau: Tableau<T>): T | undefined {
+    retourner tableau[0]
+}
+
+/**
+ * Returns the last element of an array
+ * @param array - The input array
+ * @returns The last element or undefined
+ */
+fonction dernier<T>(tableau: Tableau<T>): T | undefined {
+    retourner tableau[tableau.longueur - 1]
+}
+
+/**
+ * Returns the nth element of an array
+ * @param array - The input array
+ * @param index - The index (supports negative indices)
+ * @returns The element at the index or undefined
+ */
+fonction nieme<T>(tableau: Tableau<T>, index: Entier): T | undefined {
+    si index < 0 {
+        retourner tableau[tableau.longueur + index]
+    }
+    retourner tableau[index]
+}
+
+/**
+ * Returns a new array with the first n elements
+ * @param array - The input array
+ * @param n - The number of elements to take
+ * @returns A new array with the first n elements
+ */
+fonction prendre<T>(tableau: Tableau<T>, n: Entier): Tableau<T> {
+    retourner tableau.slice(0, n)
+}
+
+/**
+ * Returns a new array without the first n elements
+ * @param array - The input array
+ * @param n - The number of elements to drop
+ * @returns A new array without the first n elements
+ */
+fonction supprimer<T>(tableau: Tableau<T>, n: Entier): Tableau<T> {
+    retourner tableau.slice(n)
+}
+
+/**
+ * Returns a new array with the last n elements
+ * @param array - The input array
+ * @param n - The number of elements to take
+ * @returns A new array with the last n elements
+ */
+fonction prendreFin<T>(tableau: Tableau<T>, n: Entier): Tableau<T> {
+    retourner tableau.slice(-n)
+}
+
+/**
+ * Returns a new array without the last n elements
+ * @param array - The input array
+ * @param n - The number of elements to drop
+ * @returns A new array without the last n elements
+ */
+fonction supprimerFin<T>(tableau: Tableau<T>, n: Entier): Tableau<T> {
+    retourner tableau.slice(0, -n)
+}
+
+/**
+ * Adds an element to the beginning of an array
+ * @param array - The input array
+ * @param element - The element to add
+ * @returns A new array with the element added
+ */
+fonction ajouterDebut<T>(tableau: Tableau<T>, element: T): Tableau<T> {
+    retourner [element, ...tableau]
+}
+
+/**
+ * Adds an element to the end of an array
+ * @param array - The input array
+ * @param element - The element to add
+ * @returns A new array with the element added
+ */
+fonction ajouterFin<T>(tableau: Tableau<T>, element: T): Tableau<T> {
+    retourner [...tableau, element]
+}
+
+/**
+ * Adds multiple elements to the beginning of an array
+ * @param array - The input array
+ * @param elements - The elements to add
+ * @returns A new array with the elements added
+ */
+fonction ajouterDebutPlusieurs<T>(tableau: Tableau<T>, ...elements: T[]): Tableau<T> {
+    retourner [...elements, ...tableau]
+}
+
+/**
+ * Adds multiple elements to the end of an array
+ * @param array - The input array
+ * @param elements - The elements to add
+ * @returns A new array with the elements added
+ */
+fonction ajouterFinPlusieurs<T>(tableau: Tableau<T>, ...elements: T[]): Tableau<T> {
+    retourner [...tableau, ...elements]
+}
+
+/**
+ * Removes an element from an array
+ * @param array - The input array
+ * @param index - The index of the element to remove
+ * @returns A new array with the element removed
+ */
+fonction supprimerElement<T>(tableau: Tableau<T>, index: Entier): Tableau<T> {
+    const nouveau = [...tableau]
+    nouveau.splice(index, 1)
+    retourner nouveau
+}
+
+/**
+ * Removes all occurrences of a value from an array
+ * @param array - The input array
+ * @param value - The value to remove
+ * @returns A new array with all occurrences removed
+ */
+fonction supprimerTous<T>(tableau: Tableau<T>, valeur: T): Tableau<T> {
+    retourner tableau.filter(v => v !== valeur)
+}
+
+/**
+ * Removes the first occurrence of a value from an array
+ * @param array - The input array
+ * @param value - The value to remove
+ * @returns A new array with the first occurrence removed
+ */
+fonction supprimerPremier<T>(tableau: Tableau<T>, valeur: T): Tableau<T> {
+    const index = tableau.indexOf(valeur)
+    si index === -1 {
+        retourner [...tableau]
+    }
+    const nouveau = [...tableau]
+    nouveau.splice(index, 1)
+    retourner nouveau
+}
+
+/**
+ * Replaces an element at a specific index
+ * @param array - The input array
+ * @param index - The index to replace
+ * @param value - The new value
+ * @returns A new array with the element replaced
+ */
+fonction remplacerA<T>(tableau: Tableau<T>, index: Entier, valeur: T): Tableau<T> {
+    const nouveau = [...tableau]
+    nouveau[index] = valeur
+    retourner nouveau
+}
+
+/**
+ * Replaces all occurrences of a value with another
+ * @param array - The input array
+ * @param oldValue - The value to replace
+ * @param newValue - The new value
+ * @returns A new array with all occurrences replaced
+ */
+fonction remplacerTout<T>(tableau: Tableau<T>, ancienneValeur: T, nouvelleValeur: T): Tableau<T> {
+    retourner tableau.map(v => v === ancienneValeur ? nouvelleValeur : v)
+}
+
+/**
+ * Inserts an element at a specific index
+ * @param array - The input array
+ * @param index - The index to insert at
+ * @param element - The element to insert
+ * @returns A new array with the element inserted
+ */
+fonction insererA<T>(tableau: Tableau<T>, index: Entier, element: T): Tableau<T> {
+    const nouveau = [...tableau]
+    nouveau.splice(index, 0, element)
+    retourner nouveau
+}
+
+/**
+ * Inserts multiple elements at a specific index
+ * @param array - The input array
+ * @param index - The index to insert at
+ * @param elements - The elements to insert
+ * @returns A new array with the elements inserted
+ */
+fonction insererPlusieursA<T>(tableau: Tableau<T>, index: Entier, ...elements: T[]): Tableau<T> {
+    const nouveau = [...tableau]
+    nouveau.splice(index, 0, ...elements)
+    retourner nouveau
+}
+
+// Array transformation
+
+/**
+ * Applies a function to each element and returns a new array
+ * @param array - The input array
+ * @param mapper - The function to apply
+ * @returns A new array with the mapped elements
+ */
+fonction mapper<T, U>(tableau: Tableau<T>, mappeur: (valeur: T, index: Entier) => U): Tableau<U> {
+    retourner tableau.map(mappeur)
+}
+
+/**
+ * Filters an array based on a predicate
+ * @param array - The input array
+ * @param predicate - The filter function
+ * @returns A new array with the filtered elements
+ */
+fonction filtrer<T>(tableau: Tableau<T>, predicat: (valeur: T, index: Entier) => Booléen): Tableau<T> {
+    retourner tableau.filter(predicat)
+}
+
+/**
+ * Reduces an array to a single value
+ * @param array - The input array
+ * @param reducer - The reduce function
+ * @param initialValue - The initial value
+ * @returns The reduced value
+ */
+fonction reduire<T, U>(tableau: Tableau<T>, reducteur: (accumulateur: U, valeur: T, index: Entier) => U, valeurInitiale: U): U {
+    retourner tableau.reduce(reducteur, valeurInitiale)
+}
+
+/**
+ * Reduces an array from right to left
+ * @param array - The input array
+ * @param reducer - The reduce function
+ * @param initialValue - The initial value
+ * @returns The reduced value
+ */
+fonction reduireDroite<T, U>(tableau: Tableau<T>, reducteur: (accumulateur: U, valeur: T, index: Entier) => U, valeurInitiale: U): U {
+    retourner tableau.reduceRight(reducteur, valeurInitiale)
+}
+
+/**
+ * Flattens a nested array
+ * @param array - The input array
+ * @param depth - The depth to flatten (default: 1)
+ * @returns A new flattened array
+ */
+fonction aplatir<T>(tableau: any[], profondeur: Entier = 1): Tableau<T> {
+    retourner tableau.flat(profondeur) as Tableau<T>
+}
+
+/**
+ * Flattens a deeply nested array
+ * @param array - The input array
+ * @returns A new flattened array
+ */
+fonction aplatirCompletement<T>(tableau: any[]): Tableau<T> {
+    retourner tableau.flat(Infinity) as Tableau<T>
+}
+
+/**
+ * Creates a new array with all sub-arrays concatenated
+ * @param arrays - The arrays to concatenate
+ * @returns A new concatenated array
+ */
+fonction concatener<T>(...tableaux: Tableau<T>[]): Tableau<T> {
+    retourner tableaux.flat()
+}
+
+// Array sorting
+
+/**
+ * Sorts an array in ascending order
+ * @param array - The input array
+ * @returns A new sorted array
+ */
+fonction trier<T>(tableau: Tableau<T>): Tableau<T> {
+    retourner [...tableau].sort()
+}
+
+/**
+ * Sorts an array using a custom comparator
+ * @param array - The input array
+ * @param comparator - The comparator function
+ * @returns A new sorted array
+ */
+fonction trierAvec<T>(tableau: Tableau<T>, comparateur: (a: T, b: T) => Nombre): Tableau<T> {
+    retourner [...tableau].sort(comparateur)
+}
+
+/**
+ * Sorts an array in descending order
+ * @param array - The input array
+ * @returns A new sorted array
+ */
+fonction trierDecroissant<T>(tableau: Tableau<T>): Tableau<T> {
+    retourner [...tableau].sort().reverse()
+}
+
+/**
+ * Sorts an array of numbers in ascending order
+ * @param array - The input array
+ * @returns A new sorted array
+ */
+fonction trierNombres(tableau: Tableau<Nombre>): Tableau<Nombre> {
+    retourner [...tableau].sort((a, b) => a - b)
+}
+
+/**
+ * Sorts an array of numbers in descending order
+ * @param array - The input array
+ * @returns A new sorted array
+ */
+fonction trierNombresDecroissant(tableau: Tableau<Nombre>): Tableau<Nombre> {
+    retourner [...tableau].sort((a, b) => b - a)
+}
+
+// Array searching
+
+/**
+ * Finds the first element that satisfies a condition
+ * @param array - The input array
+ * @param predicate - The condition function
+ * @returns The first matching element or undefined
+ */
+fonction trouver<T>(tableau: Tableau<T>, predicat: (valeur: T, index: Entier) => Booléen): T | undefined {
+    retourner tableau.find(predicat)
+}
+
+/**
+ * Finds the index of the first element that satisfies a condition
+ * @param array - The input array
+ * @param predicate - The condition function
+ * @returns The index of the first matching element or -1
+ */
+fonction trouverIndex<T>(tableau: Tableau<T>, predicat: (valeur: T, index: Entier) => Booléen): Entier {
+    retourner tableau.findIndex(predicat)
+}
+
+/**
+ * Checks if all elements satisfy a condition
+ * @param array - The input array
+ * @param predicate - The condition function
+ * @returns True if all elements satisfy the condition
+ */
+fonction tous<T>(tableau: Tableau<T>, predicat: (valeur: T, index: Entier) => Booléen): Booléen {
+    retourner tableau.every(predicat)
+}
+
+/**
+ * Checks if any element satisfies a condition
+ * @param array - The input array
+ * @param predicate - The condition function
+ * @returns True if any element satisfies the condition
+ */
+fonction certains<T>(tableau: Tableau<T>, predicat: (valeur: T, index: Entier) => Booléen): Booléen {
+    retourner tableau.some(predicat)
+}
+
+/**
+ * Checks if an array contains a value
+ * @param array - The input array
+ * @param value - The value to check
+ * @returns True if the array contains the value
+ */
+fonction contient<T>(tableau: Tableau<T>, valeur: T): Booléen {
+    retourner tableau.includes(valeur)
+}
+
+/**
+ * Checks if an array is empty
+ * @param array - The input array
+ * @returns True if the array is empty
+ */
+fonction estVide<T>(tableau: Tableau<T>): Booléen {
+    retourner tableau.longueur === 0
+}
+
+/**
+ * Checks if an array is not empty
+ * @param array - The input array
+ * @returns True if the array is not empty
+ */
+fonction estNonVide<T>(tableau: Tableau<T>): Booléen {
+    retourner tableau.longueur > 0
+}
+
+// Array information
+
+/**
+ * Returns the length of an array
+ * @param array - The input array
+ * @returns The length
+ */
+fonction longueur<T>(tableau: Tableau<T>): Entier {
+    retourner tableau.longueur
+}
+
+/**
+ * Returns the index of a value in an array
+ * @param array - The input array
+ * @param value - The value to find
+ * @returns The index or -1 if not found
+ */
+fonction indexDe<T>(tableau: Tableau<T>, valeur: T): Entier {
+    retourner tableau.indexOf(valeur)
+}
+
+/**
+ * Returns the last index of a value in an array
+ * @param array - The input array
+ * @param value - The value to find
+ * @returns The last index or -1 if not found
+ */
+fonction dernierIndexDe<T>(tableau: Tableau<T>, valeur: T): Entier {
+    retourner tableau.lastIndexOf(valeur)
+}
+
+// Array creation
+
+/**
+ * Creates an array from a range of numbers
+ * @param start - The start value (inclusive)
+ * @param end - The end value (exclusive)
+ * @param step - The step size (default: 1)
+ * @returns A new array with the range
+ */
+fonction plage(debut: Nombre, fin: Nombre, pas: Nombre = 1): Tableau<Nombre> {
+    const result: Tableau<Nombre> = []
+    pour (let i = debut; i < fin; i += pas) {
+        result.push(i)
+    }
+    retourner result
+}
+
+/**
+ * Creates an array with n elements, all set to a value
+ * @param length - The length of the array
+ * @param value - The value to fill with
+ * @returns A new array filled with the value
+ */
+fonction remplir<T>(longueur: Entier, valeur: T): Tableau<T> {
+    retourner Array(longueur).fill(valeur)
+}
+
+/**
+ * Creates an array from a generator function
+ * @param length - The length of the array
+ * @param generator - The function to generate each element
+ * @returns A new array with generated elements
+ */
+fonction generer<T>(longueur: Entier, generateur: (index: Entier) => T): Tableau<T> {
+    const result: Tableau<T> = []
+    pour (let i = 0; i < longueur; i++) {
+        result.push(generateur(i))
+    }
+    retourner result
+}
+
+// Map utilities
+
+/**
+ * Creates a map from an array of key-value pairs
+ * @param entries - The key-value pairs
+ * @returns A new map
+ */
+fonction carteDe(entrees: Tableau<[any, any]>): Carte<any, any> {
+    retourner new Carte(entrees)
+}
+
+/**
+ * Gets the keys of a map as an array
+ * @param map - The input map
+ * @returns An array of keys
+ */
+fonction cles<T>(carte: Carte<T, any>): Tableau<T> {
+    retourner Array.from(carte.keys())
+}
+
+/**
+ * Gets the values of a map as an array
+ * @param map - The input map
+ * @returns An array of values
+ */
+fonction valeurs<T>(carte: Carte<any, T>): Tableau<T> {
+    retourner Array.from(carte.values())
+}
+
+/**
+ * Gets the entries of a map as an array
+ * @param map - The input map
+ * @returns An array of entries
+ */
+fonction entrees<T, U>(carte: Carte<T, U>): Tableau<[T, U]> {
+    retourner Array.from(carte.entries())
+}
+
+/**
+ * Checks if a map contains a key
+ * @param map - The input map
+ * @param key - The key to check
+ * @returns True if the map contains the key
+ */
+fonction contientCle<T>(carte: Carte<T, any>, cle: T): Booléen {
+    retourner carte.has(cle)
+}
+
+/**
+ * Gets a value from a map
+ * @param map - The input map
+ * @param key - The key
+ * @returns The value or undefined
+ */
+fonction obtenir<T, U>(carte: Carte<T, U>, cle: T): U | undefined {
+    retourner carte.get(cle)
+}
+
+/**
+ * Sets a value in a map
+ * @param map - The input map
+ * @param key - The key
+ * @param value - The value
+ * @returns The map
+ */
+fonction definire<T, U>(carte: Carte<T, U>, cle: T, valeur: U): Carte<T, U> {
+    carte.set(cle, valeur)
+    retourner carte
+}
+
+/**
+ * Removes a key from a map
+ * @param map - The input map
+ * @param key - The key to remove
+ * @returns True if the key was removed
+ */
+fonction supprimerCle<T>(carte: Carte<T, any>, cle: T): Booléen {
+    retourner carte.delete(cle)
+}
+
+// Set utilities
+
+/**
+ * Creates a set from an array
+ * @param array - The input array
+ * @returns A new set
+ */
+fonction ensembleDe<T>(tableau: Tableau<T>): Ensemble<T> {
+    retourner new Ensemble(tableau)
+}
+
+/**
+ * Checks if a set contains a value
+ * @param set - The input set
+ * @param value - The value to check
+ * @returns True if the set contains the value
+ */
+fonction contientEnsemble<T>(ensemble: Ensemble<T>, valeur: T): Booléen {
+    retourner ensemble.has(valeur)
+}
+
+/**
+ * Adds a value to a set
+ * @param set - The input set
+ * @param value - The value to add
+ * @returns The set
+ */
+fonction ajouterEnsemble<T>(ensemble: Ensemble<T>, valeur: T): Ensemble<T> {
+    ensemble.add(valeur)
+    retourner ensemble
+}
+
+/**
+ * Removes a value from a set
+ * @param set - The input set
+ * @param value - The value to remove
+ * @returns True if the value was removed
+ */
+fonction supprimerEnsemble<T>(ensemble: Ensemble<T>, valeur: T): Booléen {
+    retourner ensemble.delete(valeur)
+}
+
+/**
+ * Returns the size of a set
+ * @param set - The input set
+ * @returns The size
+ */
+fonction tailleEnsemble<T>(ensemble: Ensemble<T>): Entier {
+    retourner ensemble.size
+}
+
+/**
+ * Checks if a set is empty
+ * @param set - The input set
+ * @returns True if the set is empty
+ */
+fonction estVideEnsemble<T>(ensemble: Ensemble<T>): Booléen {
+    retourner ensemble.size === 0
+}
+
+// Set operations
+
+/**
+ * Returns the union of two sets
+ * @param a - The first set
+ * @param b - The second set
+ * @returns A new set with the union
+ */
+fonction union<T>(a: Ensemble<T>, b: Ensemble<T>): Ensemble<T> {
+    const result = new Ensemble(a)
+    pour chaque val de b {
+        result.add(val)
+    }
+    retourner result
+}
+
+/**
+ * Returns the intersection of two sets
+ * @param a - The first set
+ * @param b - The second set
+ * @returns A new set with the intersection
+ */
+fonction intersection<T>(a: Ensemble<T>, b: Ensemble<T>): Ensemble<T> {
+    const result = new Ensemble<T>()
+    pour chaque val de a {
+        si b.has(val) {
+            result.add(val)
+        }
+    }
+    retourner result
+}
+
+/**
+ * Returns the difference of two sets (a - b)
+ * @param a - The first set
+ * @param b - The second set
+ * @returns A new set with the difference
+ */
+fonction difference<T>(a: Ensemble<T>, b: Ensemble<T>): Ensemble<T> {
+    const result = new Ensemble<T>()
+    pour chaque val de a {
+        si !b.has(val) {
+            result.add(val)
+        }
+    }
+    retourner result
+}
+
+/**
+ * Returns the symmetric difference of two sets
+ * @param a - The first set
+ * @param b - The second set
+ * @returns A new set with the symmetric difference
+ */
+fonction differenceSymetrique<T>(a: Ensemble<T>, b: Ensemble<T>): Ensemble<T> {
+    const result = new Ensemble<T>()
+    pour chaque val de a {
+        si !b.has(val) {
+            result.add(val)
+        }
+    }
+    pour chaque val de b {
+        si !a.has(val) {
+            result.add(val)
+        }
+    }
+    retourner result
+}
+
+/**
+ * Checks if a set is a subset of another
+ * @param a - The first set
+ * @param b - The second set
+ * @returns True if a is a subset of b
+ */
+fonction sousEnsemble<T>(a: Ensemble<T>, b: Ensemble<T>): Booléen {
+    pour chaque val de a {
+        si !b.has(val) {
+            retourner faux
+        }
+    }
+    retourner vrai
+}
+
+/**
+ * Checks if a set is a superset of another
+ * @param a - The first set
+ * @param b - The second set
+ * @returns True if a is a superset of b
+ */
+fonction surEnsemble<T>(a: Ensemble<T>, b: Ensemble<T>): Booléen {
+    retourner sousEnsemble(b, a)
+}
+
+/**
+ * Checks if two sets are disjoint
+ * @param a - The first set
+ * @param b - The second set
+ * @returns True if the sets are disjoint
+ */
+fonction disjoint<T>(a: Ensemble<T>, b: Ensemble<T>): Booléen {
+    pour chaque val de a {
+        si b.has(val) {
+            retourner faux
+        }
+    }
+    retourner vrai
+}

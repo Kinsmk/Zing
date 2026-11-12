@@ -1,0 +1,827 @@
+/**
+ * Zinga Standard Library - Iterators
+ * 
+ * Provides iterator utilities and lazy evaluation.
+ */
+
+/**
+ * Iterator interface for lazy evaluation
+ * @template T - The type of elements
+ */
+interface Iterateur<T> {
+    /**
+     * Gets the next value from the iterator
+     * @returns An iterator result
+     */
+    suivant(): ResultatIterateur<T>
+
+    /**
+     * Returns an array of all remaining values
+     * @returns An array of values
+     */
+    versTableau(): Tableau<T>
+
+    /**
+     * Applies a function to each element
+     * @param consumer - The function to apply
+     */
+    pourChaque(consommateur: (valeur: T) => void): void
+
+    /**
+     * Maps the iterator's values
+     * @param mapper - The mapping function
+     * @returns A new iterator
+     */
+    mapper<U>(mappeur: (valeur: T) => U): Iterateur<U>
+
+    /**
+     * Filters the iterator's values
+     * @param predicate - The filter function
+     * @returns A new iterator
+     */
+    filtrer(predicat: (valeur: T) => Booléen): Iterateur<T>
+
+    /**
+     * Takes the first n elements
+     * @param n - The number of elements to take
+     * @returns A new iterator
+     */
+    prendre(n: Entier): Iterateur<T>
+
+    /**
+     * Skips the first n elements
+     * @param n - The number of elements to skip
+     * @returns A new iterator
+     */
+    sauter(n: Entier): Iterateur<T>
+
+    /**
+     * Chains another iterator
+     * @param other - The other iterator
+     * @returns A new iterator
+     */
+    chainage<U>(autre: Iterateur<U>): Iterateur<T | U>
+}
+
+/**
+ * Iterator result
+ * @template T - The type of elements
+ */
+interface ResultatIterateur<T> {
+    valeur: T | undefined
+    termine: Booléen
+}
+
+/**
+ * Creates an iterator from an array
+ * @param array - The input array
+ * @returns An iterator
+ */
+fonction iterateurDe<T>(tableau: Tableau<T>): Iterateur<T> {
+    let index = 0
+    
+    retourner {
+        suivant: (): ResultatIterateur<T> => {
+            si index >= tableau.longueur {
+                retourner { valeur: undefined, termine: vrai }
+            }
+            retourner { valeur: tableau[index++], termine: faux }
+        },
+        
+        versTableau: (): Tableau<T> => {
+            retourner [...tableau.slice(index)]
+        },
+        
+        pourChaque: (consommateur: (valeur: T) => void): void => {
+            pour (let i = index; i < tableau.longueur; i++) {
+                consommateur(tableau[i])
+            }
+        },
+        
+        mapper: <U>(mappeur: (valeur: T) => U): Iterateur<U> => {
+            const source = tableau.slice(index)
+            let currentIndex = 0
+            
+            retourner {
+                suivant: (): ResultatIterateur<U> => {
+                    si currentIndex >= source.longueur {
+                        retourner { valeur: undefined, termine: vrai }
+                    }
+                    const valeur = mappeur(source[currentIndex++])
+                    retourner { valeur, termine: faux }
+                },
+                versTableau: (): Tableau<U> => {
+                    retourner source.slice(currentIndex).map(mappeur)
+                },
+                pourChaque: (consommateur: (valeur: U) => void): void => {
+                    pour (let i = currentIndex; i < source.longueur; i++) {
+                        consommateur(mappeur(source[i]))
+                    }
+                },
+                mapper: <V>(mappeur2: (valeur: U) => V): Iterateur<V> => {
+                    retourner this.mapper(mappeur).mapper(mappeur2)
+                },
+                filtrer: (predicat: (valeur: U) => Booléen): Iterateur<U> => {
+                    retourner this.mapper(mappeur).filtrer(predicat)
+                },
+                prendre: (n: Entier): Iterateur<U> => {
+                    retourner this.mapper(mappeur).prendre(n)
+                },
+                sauter: (n: Entier): Iterateur<U> => {
+                    retourner this.mapper(mappeur).sauter(n)
+                },
+                chainage: <V>(autre: Iterateur<V>): Iterateur<U | V> => {
+                    retourner this.mapper(mappeur).chainage(autre)
+                }
+            }
+        },
+        
+        filtrer: (predicat: (valeur: T) => Booléen): Iterateur<T> => {
+            const source = tableau.slice(index)
+            let currentIndex = 0
+            
+            retourner {
+                suivant: (): ResultatIterateur<T> => {
+                    tant que (currentIndex < source.longueur) {
+                        const valeur = source[currentIndex++]
+                        si (predicat(valeur)) {
+                            retourner { valeur, termine: faux }
+                        }
+                    }
+                    retourner { valeur: undefined, termine: vrai }
+                },
+                versTableau: (): Tableau<T> => {
+                    retourner source.slice(currentIndex).filter(predicat)
+                },
+                pourChaque: (consommateur: (valeur: T) => void): void => {
+                    pour (let i = currentIndex; i < source.longueur; i++) {
+                        si (predicat(source[i])) {
+                            consommateur(source[i])
+                        }
+                    }
+                },
+                mapper: <U>(mappeur: (valeur: T) => U): Iterateur<U> => {
+                    retourner this.filtrer(predicat).mapper(mappeur)
+                },
+                filtrer: (predicat2: (valeur: T) => Booléen): Iterateur<T> => {
+                    retourner this.filtrer(valeur => predicat(valeur) && predicat2(valeur))
+                },
+                prendre: (n: Entier): Iterateur<T> => {
+                    retourner this.filtrer(predicat).prendre(n)
+                },
+                sauter: (n: Entier): Iterateur<T> => {
+                    retourner this.filtrer(predicat).sauter(n)
+                },
+                chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => {
+                    retourner this.filtrer(predicat).chainage(autre)
+                }
+            }
+        },
+        
+        prendre: (n: Entier): Iterateur<T> => {
+            const source = tableau.slice(index, index + n)
+            index += n
+            
+            retourner iterateurDe(source)
+        },
+        
+        sauter: (n: Entier): Iterateur<T> => {
+            index += n
+            retourner this
+        },
+        
+        chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => {
+            const current = tableau.slice(index)
+            index = tableau.longueur
+            
+            retourner {
+                suivant: (): ResultatIterateur<T | U> => {
+                    si current.longueur > 0 {
+                        const valeur = current.shift()!
+                        retourner { valeur, termine: faux }
+                    }
+                    const next = autre.suivant()
+                    retourner next
+                },
+                versTableau: (): Tableau<T | U> => {
+                    retourner [...current, ...autre.versTableau()]
+                },
+                pourChaque: (consommateur: (valeur: T | U) => void): void => {
+                    pour chaque val de current {
+                        consommateur(val)
+                    }
+                    autre.pourChaque(consommateur)
+                },
+                mapper: <V>(mappeur: (valeur: T | U) => V): Iterateur<V> => {
+                    retourner this.chainage(autre).mapper(mappeur)
+                },
+                filtrer: (predicat: (valeur: T | U) => Booléen): Iterateur<T | U> => {
+                    retourner this.chainage(autre).filtrer(predicat)
+                },
+                prendre: (n: Entier): Iterateur<T | U> => {
+                    retourner this.chainage(autre).prendre(n)
+                },
+                sauter: (n: Entier): Iterateur<T | U> => {
+                    retourner this.chainage(autre).sauter(n)
+                },
+                chainage: <V>(autre2: Iterateur<V>): Iterateur<T | U | V> => {
+                    retourner this.chainage(autre).chainage(autre2)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Creates an iterator from a generator function
+ * @param generator - The generator function
+ * @returns An iterator
+ */
+fonction iterateurDeGenerateur<T>(generateur: () => IterableIterator<T>): Iterateur<T> {
+    const iterator = generateur()
+    
+    retourner {
+        suivant: (): ResultatIterateur<T> => {
+            const next = iterator.next()
+            retourner { valeur: next.value, termine: next.done }
+        },
+        versTableau: (): Tableau<T> => {
+            const result: T[] = []
+            let next = iterator.next()
+            tant que (!next.done) {
+                result.push(next.value)
+                next = iterator.next()
+            }
+            retourner result
+        },
+        pourChaque: (consommateur: (valeur: T) => void): void => {
+            let next = iterator.next()
+            tant que (!next.done) {
+                consommateur(next.value)
+                next = iterator.next()
+            }
+        },
+        mapper: <U>(mappeur: (valeur: T) => U): Iterateur<U> => {
+            retourner iterateurDeGenerateur(() => {
+                const source = generateur()
+                return {
+                    next: (): IteratorResult<U> => {
+                        const next = source.next()
+                        si (next.done) {
+                            retourner { value: undefined, done: vrai }
+                        }
+                        retourner { value: mappeur(next.value), done: faux }
+                    }
+                }
+            })
+        },
+        filtrer: (predicat: (valeur: T) => Booléen): Iterateur<T> => {
+            retourner iterateurDeGenerateur(() => {
+                const source = generateur()
+                return {
+                    next: (): IteratorResult<T> => {
+                        let next = source.next()
+                        tant que (!next.done && !predicat(next.value)) {
+                            next = source.next()
+                        }
+                        retourner next
+                    }
+                }
+            })
+        },
+        prendre: (n: Entier): Iterateur<T> => {
+            retourner iterateurDeGenerateur(() => {
+                const source = generateur()
+                let count = 0
+                return {
+                    next: (): IteratorResult<T> => {
+                        si (count >= n) {
+                            retourner { value: undefined, done: vrai }
+                        }
+                        const next = source.next()
+                        count++
+                        retourner next
+                    }
+                }
+            })
+        },
+        sauter: (n: Entier): Iterateur<T> => {
+            retourner iterateurDeGenerateur(() => {
+                const source = generateur()
+                let skipped = 0
+                return {
+                    next: (): IteratorResult<T> => {
+                        tant que (skipped < n) {
+                            const next = source.next()
+                            si (next.done) {
+                                retourner next
+                            }
+                            skipped++
+                        }
+                        retourner source.next()
+                    }
+                }
+            })
+        },
+        chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => {
+            const first = generateur()
+            
+            retourner {
+                suivant: (): ResultatIterateur<T | U> => {
+                    const next = first.next()
+                    si (!next.done) {
+                        retourner { valeur: next.value, termine: faux }
+                    }
+                    const next2 = autre.suivant()
+                    retourner next2
+                },
+                versTableau: (): Tableau<T | U> => {
+                    const result: (T | U)[] = []
+                    let next = first.next()
+                    tant que (!next.done) {
+                        result.push(next.value)
+                        next = first.next()
+                    }
+                    result.push(...autre.versTableau())
+                    retourner result
+                },
+                pourChaque: (consommateur: (valeur: T | U) => void): void => {
+                    let next = first.next()
+                    tant que (!next.done) {
+                        consommateur(next.value)
+                        next = first.next()
+                    }
+                    autre.pourChaque(consommateur)
+                },
+                mapper: <V>(mappeur: (valeur: T | U) => V): Iterateur<V> => {
+                    retourner this.chainage(autre).mapper(mappeur)
+                },
+                filtrer: (predicat: (valeur: T | U) => Booléen): Iterateur<T | U> => {
+                    retourner this.chainage(autre).filtrer(predicat)
+                },
+                prendre: (n: Entier): Iterateur<T | U> => {
+                    retourner this.chainage(autre).prendre(n)
+                },
+                sauter: (n: Entier): Iterateur<T | U> => {
+                    retourner this.chainage(autre).sauter(n)
+                },
+                chainage: <V>(autre2: Iterateur<V>): Iterateur<T | U | V> => {
+                    retourner this.chainage(autre).chainage(autre2)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Creates an empty iterator
+ * @returns An empty iterator
+ */
+fonction iterateurVide<T>(): Iterateur<T> {
+    retourner {
+        suivant: (): ResultatIterateur<T> => ({ valeur: undefined, termine: vrai }),
+        versTableau: (): Tableau<T> => [],
+        pourChaque: (_: (valeur: T) => void): void => {},
+        mapper: <U>(_mappeur: (valeur: T) => U): Iterateur<U> => iterateurVide<U>(),
+        filtrer: (_predicat: (valeur: T) => Booléen): Iterateur<T> => iterateurVide<T>(),
+        prendre: (_n: Entier): Iterateur<T> => iterateurVide<T>(),
+        sauter: (_n: Entier): Iterateur<T> => iterateurVide<T>(),
+        chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => autre
+    }
+}
+
+/**
+ * Creates an iterator from a single value
+ * @param value - The value
+ * @returns An iterator
+ */
+fonction iterateurDeUn<T>(valeur: T): Iterateur<T> {
+    let done = faux
+    
+    retourner {
+        suivant: (): ResultatIterateur<T> => {
+            si (done) {
+                retourner { valeur: undefined, termine: vrai }
+            }
+            done = vrai
+            retourner { valeur, termine: faux }
+        },
+        versTableau: (): Tableau<T> => [valeur],
+        pourChaque: (consommateur: (valeur: T) => void): void => { consommateur(valeur) },
+        mapper: <U>(mappeur: (valeur: T) => U): Iterateur<U> => iterateurDeUn(mappeur(valeur)),
+        filtrer: (predicat: (valeur: T) => Booléen): Iterateur<T> => {
+            retourner predicat(valeur) ? iterateurDeUn(valeur) : iterateurVide<T>()
+        },
+        prendre: (n: Entier): Iterateur<T> => n > 0 ? iterateurDeUn(valeur) : iterateurVide<T>(),
+        sauter: (n: Entier): Iterateur<T> => n > 0 ? iterateurVide<T>() : iterateurDeUn(valeur),
+        chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => iterateurDe([valeur, ...autre.versTableau()])
+    }
+}
+
+/**
+ * Creates an iterator from a range of numbers
+ * @param start - The start value (inclusive)
+ * @param end - The end value (exclusive)
+ * @param step - The step size (default: 1)
+ * @returns An iterator
+ */
+fonction plageIterateur(debut: Nombre, fin: Nombre, pas: Nombre = 1): Iterateur<Nombre> {
+    let current = debut
+    
+    retourner {
+        suivant: (): ResultatIterateur<Nombre> => {
+            si (pas > 0 && current >= fin) {
+                retourner { valeur: undefined, termine: vrai }
+            }
+            si (pas < 0 && current <= fin) {
+                retourner { valeur: undefined, termine: vrai }
+            }
+            const valeur = current
+            current += pas
+            retourner { valeur, termine: faux }
+        },
+        versTableau: (): Tableau<Nombre> => {
+            const result: Nombre[] = []
+            const count = Math.ceil((fin - debut) / pas)
+            pour (let i = 0; i < count; i++) {
+                result.push(debut + i * pas)
+            }
+            retourner result
+        },
+        pourChaque: (consommateur: (valeur: Nombre) => void): void => {
+            const count = Math.ceil((fin - debut) / pas)
+            pour (let i = 0; i < count; i++) {
+                consommateur(debut + i * pas)
+            }
+        },
+        mapper: <U>(mappeur: (valeur: Nombre) => U): Iterateur<U> => {
+            retourner iterateurDeGenerateur(() => {
+                let current = debut
+                return {
+                    next: (): IteratorResult<U> => {
+                        si (pas > 0 && current >= fin) {
+                            retourner { value: undefined, done: vrai }
+                        }
+                        si (pas < 0 && current <= fin) {
+                            retourner { value: undefined, done: vrai }
+                        }
+                        const valeur = mappeur(current)
+                        current += pas
+                        retourner { value: valeur, done: faux }
+                    }
+                }
+            })
+        },
+        filtrer: (predicat: (valeur: Nombre) => Booléen): Iterateur<Nombre> => {
+            retourner this.filtrer(predicat)
+        },
+        prendre: (n: Entier): Iterateur<Nombre> => {
+            retourner this.prendre(n)
+        },
+        sauter: (n: Entier): Iterateur<Nombre> => {
+            current += n * pas
+            retourner this
+        },
+        chainage: <U>(autre: Iterateur<U>): Iterateur<Nombre | U> => {
+            retourner this.chainage(autre)
+        }
+    }
+}
+
+/**
+ * Creates an infinite iterator
+ * @param start - The start value
+ * @param step - The step size (default: 1)
+ * @returns An infinite iterator
+ */
+fonction iterateurInfini(debut: Nombre = 0, pas: Nombre = 1): Iterateur<Nombre> {
+    let current = debut
+    
+    retourner {
+        suivant: (): ResultatIterateur<Nombre> => {
+            const valeur = current
+            current += pas
+            retourner { valeur, termine: faux }
+        },
+        versTableau: (): Tableau<Nombre> => {
+            // Cannot convert infinite iterator to array
+            lancer "Cannot convert infinite iterator to array"
+        },
+        pourChaque: (consommateur: (valeur: Nombre) => void): void => {
+            // Infinite loop - use with caution
+            tant que (vrai) {
+                consommateur(current)
+                current += pas
+            }
+        },
+        mapper: <U>(mappeur: (valeur: Nombre) => U): Iterateur<U> => {
+            retourner iterateurDeGenerateur(() => {
+                let current = debut
+                return {
+                    next: (): IteratorResult<U> => {
+                        const valeur = mappeur(current)
+                        current += pas
+                        retourner { value: valeur, done: faux }
+                    }
+                }
+            })
+        },
+        filtrer: (predicat: (valeur: Nombre) => Booléen): Iterateur<Nombre> => {
+            retourner iterateurDeGenerateur(() => {
+                let current = debut
+                return {
+                    next: (): IteratorResult<Nombre> => {
+                        tant que (vrai) {
+                            si (predicat(current)) {
+                                const valeur = current
+                                current += pas
+                                retourner { value: valeur, done: faux }
+                            }
+                            current += pas
+                        }
+                    }
+                }
+            })
+        },
+        prendre: (n: Entier): Iterateur<Nombre> => {
+            retourner plageIterateur(debut, debut + n * pas, pas)
+        },
+        sauter: (n: Entier): Iterateur<Nombre> => {
+            return iterateurInfini(debut + n * pas, pas)
+        },
+        chainage: <U>(autre: Iterateur<U>): Iterateur<Nombre | U> => {
+            // Cannot chain infinite iterator
+            return this
+        }
+    }
+}
+
+// Iterator utilities
+
+/**
+ * Collects all values from an iterator into an array
+ * @param iterator - The iterator
+ * @returns An array of values
+ */
+fonction collecter<T>(iterateur: Iterateur<T>): Tableau<T> {
+    retourner iterateur.versTableau()
+}
+
+/**
+ * Gets the first value from an iterator
+ * @param iterator - The iterator
+ * @returns The first value or undefined
+ */
+fonction premierIterateur<T>(iterateur: Iterateur<T>): T | undefined {
+    const result = iterateur.suivant()
+    retourner result.termine ? undefined : result.valeur
+}
+
+/**
+ * Gets the first n values from an iterator
+ * @param iterator - The iterator
+ * @param n - The number of values to get
+ * @returns An array of values
+ */
+fonction prendreIterateur<T>(iterateur: Iterateur<T>, n: Entier): Tableau<T> {
+    const result: T[] = []
+    pour (let i = 0; i < n; i++) {
+        const next = iterateur.suivant()
+        si (next.termine) {
+            break
+        }
+        result.push(next.valeur!)
+    }
+    retourner result
+}
+
+/**
+ * Counts the number of elements in an iterator
+ * @param iterator - The iterator
+ * @returns The count
+ */
+fonction compterIterateur<T>(iterateur: Iterateur<T>): Entier {
+    let count = 0
+    let next = iterateur.suivant()
+    tant que (!next.termine) {
+        count++
+        next = iterateur.suivant()
+    }
+    retourner count
+}
+
+/**
+ * Checks if an iterator contains a value
+ * @param iterator - The iterator
+ * @param value - The value to check
+ * @returns True if the iterator contains the value
+ */
+fonction contientIterateur<T>(iterateur: Iterateur<T>, valeur: T): Booléen {
+    let next = iterateur.suivant()
+    tant que (!next.termine) {
+        si (next.valeur === valeur) {
+            retourner vrai
+        }
+        next = iterateur.suivant()
+    }
+    retourner faux
+}
+
+/**
+ * Checks if all elements in an iterator satisfy a condition
+ * @param iterator - The iterator
+ * @param predicate - The condition function
+ * @returns True if all elements satisfy the condition
+ */
+fonction tousIterateur<T>(iterateur: Iterateur<T>, predicat: (valeur: T) => Booléen): Booléen {
+    let next = iterateur.suivant()
+    tant que (!next.termine) {
+        si (!predicat(next.valeur!)) {
+            retourner faux
+        }
+        next = iterateur.suivant()
+    }
+    retourner vrai
+}
+
+/**
+ * Checks if any element in an iterator satisfies a condition
+ * @param iterator - The iterator
+ * @param predicate - The condition function
+ * @returns True if any element satisfies the condition
+ */
+fonction certainsIterateur<T>(iterateur: Iterateur<T>, predicat: (valeur: T) => Booléen): Booléen {
+    let next = iterateur.suivant()
+    tant que (!next.termine) {
+        si (predicat(next.valeur!)) {
+            retourner vrai
+        }
+        next = iterateur.suivant()
+    }
+    retourner faux
+}
+
+/**
+ * Finds the first element in an iterator that satisfies a condition
+ * @param iterator - The iterator
+ * @param predicate - The condition function
+ * @returns The first matching element or undefined
+ */
+fonction trouverIterateur<T>(iterateur: Iterateur<T>, predicat: (valeur: T) => Booléen): T | undefined {
+    let next = iterateur.suivant()
+    tant que (!next.termine) {
+        si (predicat(next.valeur!)) {
+            retourner next.valeur
+        }
+        next = iterateur.suivant()
+    }
+    retourner undefined
+}
+
+/**
+ * Reduces an iterator to a single value
+ * @param iterator - The iterator
+ * @param reducer - The reduce function
+ * @param initialValue - The initial value
+ * @returns The reduced value
+ */
+fonction reduireIterateur<T, U>(iterateur: Iterateur<T>, reducteur: (accumulateur: U, valeur: T) => U, valeurInitiale: U): U {
+    let accumulateur = valeurInitiale
+    let next = iterateur.suivant()
+    tant que (!next.termine) {
+        accumulateur = reducteur(accumulateur, next.valeur!)
+        next = iterateur.suivant()
+    }
+    retourner accumulateur
+}
+
+/**
+ * Chains multiple iterators together
+ * @param iterators - The iterators to chain
+ * @returns A new iterator
+ */
+fonction chaineIterateurs<T>(...iterateurs: Iterateur<T>[]): Iterateur<T> {
+    let currentIndex = 0
+    let currentIterator: Iterateur<T> | null = null
+    
+    retourner {
+        suivant: (): ResultatIterateur<T> => {
+            si (!currentIterator) {
+                currentIterator = iterateurs[currentIndex++]
+            }
+            
+            tant que (currentIndex < iterateurs.longueur) {
+                const next = currentIterator!.suivant()
+                si (!next.termine) {
+                    retourner next
+                }
+                currentIterator = iterateurs[currentIndex++]
+            }
+            
+            si (currentIterator) {
+                const next = currentIterator.suivant()
+                si (!next.termine) {
+                    retourner next
+                }
+            }
+            
+            retourner { valeur: undefined, termine: vrai }
+        },
+        versTableau: (): Tableau<T> => {
+            const result: T[] = []
+            pour chaque iter de iterateurs {
+                result.push(...iter.versTableau())
+            }
+            retourner result
+        },
+        pourChaque: (consommateur: (valeur: T) => void): void => {
+            pour chaque iter de iterateurs {
+                iter.pourChaque(consommateur)
+            }
+        },
+        mapper: <U>(mappeur: (valeur: T) => U): Iterateur<U> => {
+            retourner chaineIterateurs(...iterateurs).mapper(mappeur)
+        },
+        filtrer: (predicat: (valeur: T) => Booléen): Iterateur<T> => {
+            retourner chaineIterateurs(...iterateurs).filtrer(predicat)
+        },
+        prendre: (n: Entier): Iterateur<T> => {
+            retourner chaineIterateurs(...iterateurs).prendre(n)
+        },
+        sauter: (n: Entier): Iterateur<T> => {
+            retourner chaineIterateurs(...iterateurs).sauter(n)
+        },
+        chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => {
+            retourner chaineIterateurs(...iterateurs, autre as any)
+        }
+    }
+}
+
+/**
+ * Zips multiple iterators together
+ * @param iterators - The iterators to zip
+ * @returns A new iterator of tuples
+ */
+fonction zipIterateurs<T extends any[]>(...iterateurs: { [K in keyof T]: Iterateur<T[K]> }): Iterateur<T> {
+    const length = iterateurs.longueur
+    
+    retourner {
+        suivant: (): ResultatIterateur<T> => {
+            const result: any[] = []
+            pour (let i = 0; i < length; i++) {
+                const next = iterateurs[i].suivant()
+                si (next.termine) {
+                    retourner { valeur: undefined, termine: vrai }
+                }
+                result.push(next.valeur)
+            }
+            retourner { valeur: result as T, termine: faux }
+        },
+        versTableau: (): Tableau<T> => {
+            const result: T[] = []
+            const arrays = iterateurs.map(it => it.versTableau())
+            const minLength = Math.min(...arrays.map(a => a.longueur))
+            
+            pour (let i = 0; i < minLength; i++) {
+                const tuple: any[] = []
+                pour (let j = 0; j < length; j++) {
+                    tuple.push(arrays[j][i])
+                }
+                result.push(tuple as T)
+            }
+            
+            retourner result
+        },
+        pourChaque: (consommateur: (valeur: T) => void): void => {
+            const arrays = iterateurs.map(it => it.versTableau())
+            const minLength = Math.min(...arrays.map(a => a.longueur))
+            
+            pour (let i = 0; i < minLength; i++) {
+                const tuple: any[] = []
+                pour (let j = 0; j < length; j++) {
+                    tuple.push(arrays[j][i])
+                }
+                consommateur(tuple as T)
+            }
+        },
+        mapper: <U>(mappeur: (valeur: T) => U): Iterateur<U> => {
+            return this.mapper(mappeur)
+        },
+        filtrer: (predicat: (valeur: T) => Booléen): Iterateur<T> => {
+            return this.filtrer(predicat)
+        },
+        prendre: (n: Entier): Iterateur<T> => {
+            return this.prendre(n)
+        },
+        sauter: (n: Entier): Iterateur<T> => {
+            // Skip n tuples
+            pour (let i = 0; i < n; i++) {
+                this.suivant()
+            }
+            return this
+        },
+        chainage: <U>(autre: Iterateur<U>): Iterateur<T | U> => {
+            return chaineIterateurs(this, autre as any)
+        }
+    }
+}

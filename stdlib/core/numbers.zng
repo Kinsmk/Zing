@@ -1,0 +1,475 @@
+/**
+ * Zinga Standard Library - Numbers
+ * 
+ * Provides mathematical functions and number utilities.
+ */
+
+// Mathematical constants
+
+/**
+ * Mathematical constant: Pi (π)
+ */
+constante PI: Flottant = 3.141592653589793
+
+/**
+ * Mathematical constant: Euler's number (e)
+ */
+constante E: Flottant = 2.718281828459045
+
+/**
+ * Mathematical constant: Square root of 2 (√2)
+ */
+constante SQRT2: Flottant = 1.4142135623730951
+
+/**
+ * Mathematical constant: Square root of 1/2 (√(1/2))
+ */
+constante SQRT1_2: Flottant = 0.7071067811865476
+
+/**
+ * Mathematical constant: Natural logarithm of 2 (ln(2))
+ */
+constante LN2: Flottant = 0.6931471805599453
+
+/**
+ * Mathematical constant: Natural logarithm of 10 (ln(10))
+ */
+constante LN10: Flottant = 2.302585092994046
+
+/**
+ * Mathematical constant: Log base 2 of e (log2(e))
+ */
+constante LOG2E: Flottant = 1.4426950408889634
+
+/**
+ * Mathematical constant: Log base 10 of e (log10(e))
+ */
+constante LOG10E: Flottant = 0.4342944819032518
+
+// Mathematical functions
+
+/**
+ * Returns the absolute value of a number
+ * @param x - The input number
+ * @returns The absolute value
+ */
+fonction abs(x: Nombre): Nombre {
+    si x < 0 {
+        retourner -x
+    }
+    retourner x
+}
+
+/**
+ * Returns the largest of two or more numbers
+ * @param values - The numbers to compare
+ * @returns The largest number
+ */
+fonction max(...valeurs: Nombre[]): Nombre {
+    si valeurs.longueur === 0 {
+        retourner -Infinity
+    }
+    
+    let max = valeurs[0]
+    pour chaque val de valeurs {
+        si val > max {
+            max = val
+        }
+    }
+    retourner max
+}
+
+/**
+ * Returns the smallest of two or more numbers
+ * @param values - The numbers to compare
+ * @returns The smallest number
+ */
+fonction min(...valeurs: Nombre[]): Nombre {
+    si valeurs.longueur === 0 {
+        retourner Infinity
+    }
+    
+    let min = valeurs[0]
+    pour chaque val de valeurs {
+        si val < min {
+            min = val
+        }
+    }
+    retourner min
+}
+
+/**
+ * Returns the sum of all numbers
+ * @param values - The numbers to sum
+ * @returns The sum
+ */
+fonction somme(...valeurs: Nombre[]): Nombre {
+    let total = 0
+    pour chaque val de valeurs {
+        total += val
+    }
+    retourner total
+}
+
+/**
+ * Returns the average of all numbers
+ * @param values - The numbers to average
+ * @returns The average
+ */
+fonction moyenne(...valeurs: Nombre[]): Nombre {
+    si valeurs.longueur === 0 {
+        retourner 0
+    }
+    retourner somme(...valeurs) / valeurs.longueur
+}
+
+/**
+ * Returns the square root of a number
+ * @param x - The input number
+ * @returns The square root
+ */
+fonction sqrt(x: Nombre): Nombre {
+    retourner Math.sqrt(x)
+}
+
+/**
+ * Returns the cube root of a number
+ * @param x - The input number
+ * @returns The cube root
+ */
+fonction cbrt(x: Nombre): Nombre {
+    retourner Math.cbrt(x)
+}
+
+/**
+ * Returns x raised to the power of y
+ * @param x - The base
+ * @param y - The exponent
+ * @returns The result of x^y
+ */
+fonction pow(x: Nombre, y: Nombre): Nombre {
+    retourner Math.pow(x, y)
+}
+
+/**
+ * Returns the square of a number
+ * @param x - The input number
+ * @returns The square
+ */
+fonction carre(x: Nombre): Nombre {
+    retourner x * x
+}
+
+/**
+ * Returns the cube of a number
+ * @param x - The input number
+ * @returns The cube
+ */
+fonction cube(x: Nombre): Nombre {
+    retourner x * x * x
+}
+
+// Trigonometric functions (in radians)
+
+/**
+ * Returns the sine of a number
+ * @param x - The input in radians
+ * @returns The sine
+ */
+fonction sin(x: Nombre): Nombre {
+    retourner Math.sin(x)
+}
+
+/**
+ * Returns the cosine of a number
+ * @param x - The input in radians
+ * @returns The cosine
+ */
+fonction cos(x: Nombre): Nombre {
+    retourner Math.cos(x)
+}
+
+/**
+ * Returns the tangent of a number
+ * @param x - The input in radians
+ * @returns The tangent
+ */
+fonction tan(x: Nombre): Nombre {
+    retourner Math.tan(x)
+}
+
+/**
+ * Returns the arcsine of a number
+ * @param x - The input (-1 to 1)
+ * @returns The arcsine in radians
+ */
+fonction asin(x: Nombre): Nombre {
+    retourner Math.asin(x)
+}
+
+/**
+ * Returns the arccosine of a number
+ * @param x - The input (-1 to 1)
+ * @returns The arccosine in radians
+ */
+fonction acos(x: Nombre): Nombre {
+    retourner Math.acos(x)
+}
+
+/**
+ * Returns the arctangent of a number
+ * @param x - The input
+ * @returns The arctangent in radians
+ */
+fonction atan(x: Nombre): Nombre {
+    retourner Math.atan(x)
+}
+
+/**
+ * Returns the arctangent of the quotient of two numbers
+ * @param y - The y coordinate
+ * @param x - The x coordinate
+ * @returns The arctangent in radians
+ */
+fonction atan2(y: Nombre, x: Nombre): Nombre {
+    retourner Math.atan2(y, x)
+}
+
+// Hyperbolic functions
+
+/**
+ * Returns the hyperbolic sine of a number
+ * @param x - The input
+ * @returns The hyperbolic sine
+ */
+fonction sinh(x: Nombre): Nombre {
+    retourner Math.sinh(x)
+}
+
+/**
+ * Returns the hyperbolic cosine of a number
+ * @param x - The input
+ * @returns The hyperbolic cosine
+ */
+fonction cosh(x: Nombre): Nombre {
+    retourner Math.cosh(x)
+}
+
+/**
+ * Returns the hyperbolic tangent of a number
+ * @param x - The input
+ * @returns The hyperbolic tangent
+ */
+fonction tanh(x: Nombre): Nombre {
+    retourner Math.tanh(x)
+}
+
+// Exponential and logarithmic functions
+
+/**
+ * Returns e raised to the power of x
+ * @param x - The exponent
+ * @returns e^x
+ */
+fonction exp(x: Nombre): Nombre {
+    retourner Math.exp(x)
+}
+
+/**
+ * Returns the natural logarithm of a number
+ * @param x - The input
+ * @returns The natural logarithm
+ */
+fonction ln(x: Nombre): Nombre {
+    retourner Math.log(x)
+}
+
+/**
+ * Returns the base-10 logarithm of a number
+ * @param x - The input
+ * @returns The base-10 logarithm
+ */
+fonction log10(x: Nombre): Nombre {
+    retourner Math.log10(x)
+}
+
+/**
+ * Returns the base-2 logarithm of a number
+ * @param x - The input
+ * @returns The base-2 logarithm
+ */
+fonction log2(x: Nombre): Nombre {
+    retourner Math.log2(x)
+}
+
+// Rounding functions
+
+/**
+ * Returns the nearest integer to a number
+ * @param x - The input
+ * @returns The rounded integer
+ */
+fonction arrondir(x: Nombre): Entier {
+    retourner Math.round(x)
+}
+
+/**
+ * Returns the largest integer less than or equal to a number
+ * @param x - The input
+ * @returns The floor value
+ */
+fonction plancher(x: Nombre): Entier {
+    retourner Math.floor(x)
+}
+
+/**
+ * Returns the smallest integer greater than or equal to a number
+ * @param x - The input
+ * @returns The ceiling value
+ */
+fonction plafond(x: Nombre): Entier {
+    retourner Math.ceil(x)
+}
+
+/**
+ * Returns the integer part of a number (truncates)
+ * @param x - The input
+ * @returns The truncated integer
+ */
+fonction tronc(x: Nombre): Entier {
+    retourner Math.trunc(x)
+}
+
+/**
+ * Returns the fractional part of a number
+ * @param x - The input
+ * @returns The fractional part
+ */
+fonction fraction(x: Nombre): Nombre {
+    retourner x - Math.trunc(x)
+}
+
+// Random functions
+
+/**
+ * Returns a random number between 0 (inclusive) and 1 (exclusive)
+ * @returns A random number
+ */
+fonction aleatoire(): Nombre {
+    retourner Math.random()
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (exclusive)
+ * @param min - The minimum value
+ * @param max - The maximum value
+ * @returns A random integer
+ */
+fonction entierAleatoire(min: Entier, max: Entier): Entier {
+    retourner Math.floor(Math.random() * (max - min)) + min
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * @param min - The minimum value
+ * @param max - The maximum value
+ * @returns A random integer
+ */
+fonction entierAleatoireInclus(min: Entier, max: Entier): Entier {
+    retourner Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+/**
+ * Returns a random element from an array
+ * @param array - The input array
+ * @returns A random element
+ */
+fonction elementAleatoire<T>(tableau: Tableau<T>): T {
+    si tableau.longueur === 0 {
+        lancer "Cannot get random element from empty array"
+    }
+    retourner tableau[entierAleatoire(0, tableau.longueur)]
+}
+
+// Number type checking
+
+/**
+ * Checks if a value is a number
+ * @param value - The value to check
+ * @returns True if the value is a number
+ */
+fonction estNombre(valeur: any): Booléen {
+    retourner typeof valeur === "number"
+}
+
+/**
+ * Checks if a value is an integer
+ * @param value - The value to check
+ * @returns True if the value is an integer
+ */
+fonction estEntier(valeur: any): Booléen {
+    retourner Number.isInteger(valeur)
+}
+
+/**
+ * Checks if a value is finite
+ * @param value - The value to check
+ * @returns True if the value is finite
+ */
+fonction estFini(valeur: any): Booléen {
+    retourner Number.isFinite(valeur)
+}
+
+/**
+ * Checks if a value is NaN
+ * @param value - The value to check
+ * @returns True if the value is NaN
+ */
+fonction estNaN(valeur: any): Booléen {
+    retourner Number.isNaN(valeur)
+}
+
+/**
+ * Checks if a value is positive
+ * @param value - The value to check
+ * @returns True if the value is positive
+ */
+fonction estPositif(valeur: Nombre): Booléen {
+    retourner valeur > 0
+}
+
+/**
+ * Checks if a value is negative
+ * @param value - The value to check
+ * @returns True if the value is negative
+ */
+fonction estNegatif(valeur: Nombre): Booléen {
+    retourner valeur < 0
+}
+
+/**
+ * Checks if a value is zero
+ * @param value - The value to check
+ * @returns True if the value is zero
+ */
+fonction estZero(valeur: Nombre): Booléen {
+    retourner valeur === 0
+}
+
+/**
+ * Checks if a value is even
+ * @param value - The value to check
+ * @returns True if the value is even
+ */
+fonction estPair(valeur: Entier): Booléen {
+    retourner valeur % 2 === 0
+}
+
+/**
+ * Checks if a value is odd
+ * @param value - The value to check
+ * @returns True if the value is odd
+ */
+fonction estImpair(valeur: Entier): Booléen {
+    retourner valeur % 2 !== 0
+}
