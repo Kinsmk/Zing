@@ -5,8 +5,8 @@
  * Il convertit le texte source en une séquence de tokens.
  */
 
-import { Token, TokenType } from './tokens';
-import { TokenTypes } from './token-types';
+import { Token } from './tokens';
+import { TokenType, TokenType as TokenTypes } from './token-types';
 import { Scanner } from './scanner';
 import { Position, SourceLocation } from './positions';
 import { Config } from '../config';
@@ -412,13 +412,6 @@ export class Lexer {
       'tableau': TokenTypes.ARRAY_TYPE,
       'objet': TokenTypes.OBJECT_TYPE,
       'fonction': TokenTypes.FUNCTION_TYPE,
-      'number': TokenTypes.NUMBER_TYPE,
-      'string': TokenTypes.STRING_TYPE,
-      'boolean': TokenTypes.BOOLEAN_TYPE,
-      'null': TokenTypes.NULL_TYPE,
-      'array': TokenTypes.ARRAY_TYPE,
-      'object': TokenTypes.OBJECT_TYPE,
-      'function': TokenTypes.FUNCTION_TYPE,
     };
 
     return keywords[value.toLowerCase()] || TokenTypes.IDENTIFIER;

@@ -5,8 +5,8 @@
  * y compris les opérateurs, les appels de fonctions, les littéraux, etc.
  */
 
-import { Token, TokenType } from '../lexer/tokens';
-import { TokenTypes } from '../lexer/token-types';
+import { Token } from '../lexer/tokens';
+import { TokenType, TokenType as TokenTypes } from '../lexer/token-types';
 import { ASTNode, Expression, BinaryExpression, UnaryExpression, Literal, Identifier, CallExpression, MemberExpression, ArrayExpression, ObjectExpression, FunctionExpression, ArrowFunctionExpression, ConditionalExpression, NewExpression, ThisExpression, SuperExpression, TemplateLiteral, TaggedTemplateExpression, SpreadElement, AwaitExpression, YieldExpression } from '../ast/nodes';
 import { Parser } from './parser';
 import { DiagnosticCollector } from '../diagnostics/errors';
@@ -309,7 +309,7 @@ export class Expressions {
   /**
    * Analyser un identifiant
    */
-  private parseIdentifier(): Identifier {
+  protected parseIdentifier(): Identifier {
     const token = this.parser.expectIdentifier();
     return new Identifier(token.value, token.location);
   }

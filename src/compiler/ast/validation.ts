@@ -5,7 +5,7 @@
  * et détecter les erreurs sémantiques.
  */
 
-import { ASTNode, Program, Statement, Expression } from './nodes';
+import { ASTNode, Statement, Expression } from './nodes';
 import { ASTVisitor, ValidationVisitor } from './visitor';
 
 export interface ValidationError {
@@ -74,7 +74,7 @@ export class ASTValidator {
     
     switch (type) {
       case 'Program':
-        this.validateProgram(node as unknown as Program);
+        this.validateProgram(node as any);
         break;
       case 'VariableDeclaration':
         this.validateVariableDeclaration(node as any);
@@ -127,7 +127,7 @@ export class ASTValidator {
   /**
    * Valider un programme
    */
-  private validateProgram(node: Program): void {
+  private validateProgram(node: any): void {
     // Vérifier qu'il y a au moins un statement
     if (node.body.length === 0) {
       this.addWarning('Program is empty', node);

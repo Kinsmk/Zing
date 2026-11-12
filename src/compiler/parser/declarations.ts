@@ -5,9 +5,9 @@
  * classes, interfaces, etc.
  */
 
-import { Token, TokenType } from '../lexer/tokens';
-import { TokenTypes } from '../lexer/token-types';
-import { ASTNode, Statement, Expression, Identifier, VariableDeclaration, VariableDeclarator, FunctionDeclaration, ClassDeclaration, ClassBody, MethodDefinition, InterfaceDeclaration, InterfaceBody, PropertyDefinition, EnumDeclaration, EnumMember, TypeAliasDeclaration, TypeParameter, TypeAnnotation } from '../ast/nodes';
+import { Token } from '../lexer/tokens';
+import { TokenType, TokenType as TokenTypes } from '../lexer/token-types';
+import { ASTNode, Statement, Expression, Identifier, VariableDeclaration, VariableDeclarator, FunctionDeclaration, ClassDeclaration, ClassBody, MethodDefinition, InterfaceDeclaration, InterfaceBody, PropertyDefinition, EnumDeclaration, EnumMember, TypeAliasDeclaration } from '../ast/nodes';
 import { Parser } from './parser';
 import { DiagnosticCollector } from '../diagnostics/errors';
 import { Expressions } from './expressions';

@@ -7,9 +7,9 @@
 
 export class Position {
   constructor(
-    public readonly index: number,
-    public readonly line: number,
-    public readonly column: number
+    public index: number,
+    public line: number,
+    public column: number
   ) {}
 
   /**

@@ -5,7 +5,7 @@
  * pour le débogage et le mapping entre le code source et le code généré.
  */
 
-import { SourceLocation } from '../lexer/positions';
+import { Position, SourceLocation } from '../lexer/positions';
 
 /**
  * Position dans le code généré
@@ -545,8 +545,8 @@ export class SourceMapUtil {
   ): SourceLocation {
     return new SourceLocation(
       filename,
-      { line: line - 1, column, index: 0 }, // -1 car les source maps sont 1-based
-      { line: line - 1, column, index: 0 }
+      new Position(line - 1, column, 0), // -1 car les source maps sont 1-based
+      new Position(line - 1, column, 0)
     );
   }
 

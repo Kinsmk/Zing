@@ -47,12 +47,20 @@ export enum TokenType {
   ENUM = 'ENUM',
   TYPE = 'TYPE',
 
+  // Modificateurs de classe
+  STATIC = 'STATIC',
+  PRIVATE = 'PRIVATE',
+  PUBLIC = 'PUBLIC',
+  PROTECTED = 'PROTECTED',
+  CONSTRUCTOR = 'CONSTRUCTOR',
+  GET = 'GET',
+  SET = 'SET',
+
   // Modules
   IMPORT = 'IMPORT',
   EXPORT = 'EXPORT',
   FROM = 'FROM',
   AS = 'AS',
-  DEFAULT = 'DEFAULT',
 
   // Types
   NUMBER_TYPE = 'NUMBER_TYPE',
@@ -88,6 +96,8 @@ export enum TokenType {
   LESS = 'LESS',
   GREATER_EQUAL = 'GREATER_EQUAL',
   LESS_EQUAL = 'LESS_EQUAL',
+  LT = 'LT',
+  GT = 'GT',
 
   // Opérateurs logiques
   AND = 'AND',
@@ -195,6 +205,13 @@ export const TokenTypeNames: Record<TokenType, string> = {
   [TokenType.INTERFACE]: 'INTERFACE',
   [TokenType.ENUM]: 'ENUM',
   [TokenType.TYPE]: 'TYPE',
+  [TokenType.STATIC]: 'STATIC',
+  [TokenType.PRIVATE]: 'PRIVATE',
+  [TokenType.PUBLIC]: 'PUBLIC',
+  [TokenType.PROTECTED]: 'PROTECTED',
+  [TokenType.CONSTRUCTOR]: 'CONSTRUCTOR',
+  [TokenType.GET]: 'GET',
+  [TokenType.SET]: 'SET',
   [TokenType.IMPORT]: 'IMPORT',
   [TokenType.EXPORT]: 'EXPORT',
   [TokenType.FROM]: 'FROM',
@@ -226,6 +243,8 @@ export const TokenTypeNames: Record<TokenType, string> = {
   [TokenType.LESS]: 'LESS',
   [TokenType.GREATER_EQUAL]: 'GREATER_EQUAL',
   [TokenType.LESS_EQUAL]: 'LESS_EQUAL',
+  [TokenType.LT]: 'LT',
+  [TokenType.GT]: 'GT',
   [TokenType.AND]: 'AND',
   [TokenType.OR]: 'OR',
   [TokenType.NOT]: 'NOT',

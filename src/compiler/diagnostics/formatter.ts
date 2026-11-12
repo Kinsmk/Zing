@@ -179,7 +179,7 @@ export class AdvancedDiagnosticFormatter extends DiagnosticFormatter {
   /**
    * Formater un indice
    */
-  private formatHint(hint: string): string {
+  protected formatHint(hint: string): string {
     const color = this.useColors ? '\x1b[90m' : ''; // Gris
     const reset = this.useColors ? '\x1b[0m' : '';
     return `${color}    hint: ${hint}${reset}`;

@@ -7,7 +7,7 @@
 import { TokenType } from './token-types';
 import { SourceLocation } from './positions';
 
-export interface Token {
+interface Token {
   type: TokenType;
   value: string;
   location: SourceLocation;

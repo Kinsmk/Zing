@@ -70,7 +70,7 @@ export interface ASTVisitor {
  */
 export class BaseVisitor implements ASTVisitor {
   visit(node: ASTNode): any {
-    const type = node.type as keyof ASTVisitor;
+    const type = node.type as unknown as keyof ASTVisitor;
     const visitor = this[type] as ((node: any) => any) | undefined;
     
     if (visitor) {

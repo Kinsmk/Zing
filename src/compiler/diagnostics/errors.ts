@@ -6,7 +6,7 @@
  */
 
 import { Token } from '../lexer/tokens';
-import { SourceLocation } from '../lexer/positions';
+import { Position, SourceLocation } from '../lexer/positions';
 
 /**
  * Niveaux de sévérité
@@ -146,8 +146,8 @@ export class DiagnosticBuilder {
     }
     if (!this.location) {
       this.location = new SourceLocation('<unknown>', 
-        { line: 0, column: 0, index: 0 },
-        { line: 0, column: 0, index: 0 }
+        new Position(0, 0, 0),
+        new Position(0, 0, 0)
       );
     }
 
@@ -208,8 +208,8 @@ export class DiagnosticCollector {
       .withMessage(message)
       .withSeverity('error')
       .withLocation(location || new SourceLocation('<unknown>', 
-        { line: 0, column: 0, index: 0 },
-        { line: 0, column: 0, index: 0 }
+        new Position(0, 0, 0),
+        new Position(0, 0, 0)
       ))
       .withToken(token)
       .withRelated(related || [])
@@ -235,8 +235,8 @@ export class DiagnosticCollector {
       .withMessage(message)
       .withSeverity('warning')
       .withLocation(location || new SourceLocation('<unknown>', 
-        { line: 0, column: 0, index: 0 },
-        { line: 0, column: 0, index: 0 }
+        new Position(0, 0, 0),
+        new Position(0, 0, 0)
       ))
       .withToken(token)
       .withHint(hint)
@@ -260,8 +260,8 @@ export class DiagnosticCollector {
       .withMessage(message)
       .withSeverity('info')
       .withLocation(location || new SourceLocation('<unknown>', 
-        { line: 0, column: 0, index: 0 },
-        { line: 0, column: 0, index: 0 }
+        new Position(0, 0, 0),
+        new Position(0, 0, 0)
       ))
       .withToken(token)
       .build();
@@ -390,7 +390,7 @@ export class DiagnosticCollector {
  * Formatage des diagnostics
  */
 export class DiagnosticFormatter {
-  private useColors: boolean;
+  protected useColors: boolean;
 
   constructor(useColors: boolean = true) {
     this.useColors = useColors;
@@ -419,7 +419,7 @@ export class DiagnosticFormatter {
   /**
    * Formater la sévérité
    */
-  private formatSeverity(severity: Severity): string {
+  protected formatSeverity(severity: Severity): string {
     const colors = {
       error: this.useColors ? '\x1b[31m' : '', // Rouge
       warning: this.useColors ? '\x1b[33m' : '', // Jaune
@@ -444,14 +444,14 @@ export class DiagnosticFormatter {
   /**
    * Formater le code d'erreur
    */
-  private formatCode(code: ErrorCode): string {
+  protected formatCode(code: ErrorCode): string {
     return `[${code}]`;
   }
 
   /**
    * Formater la location
    */
-  private formatLocation(location: SourceLocation): string {
+  protected formatLocation(location: SourceLocation): string {
     if (location.filename === '<unknown>') {
       return `${location.start.line + 1}:${location.start.column + 1}`;
     }
@@ -461,7 +461,7 @@ export class DiagnosticFormatter {
   /**
    * Formater un indice
    */
-  private formatHint(hint: string): string {
+  protected formatHint(hint: string): string {
     return `\n    hint: ${hint}`;
   }
 
